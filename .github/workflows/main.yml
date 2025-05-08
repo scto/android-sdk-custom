@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Specific Branches or Tags"
+        required: true
+        default: "platform-tools-35.0.2"
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target_arch: [x86_64, x86, arm64-v8a, armeabi-v7a]
+      fail-fast: false
+    env:
+      ROOT: ${{github.workspace}}
+      PROTOBUF: ${{github.workspace}}/src/protobuf/build/protoc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get Sources
+        run: python get_source.py --tags ${{ inputs.tag }}
+          
+      - name: Install Dependencies
+        run: sudo apt install ninja-build
+
+      - name: Build protobuf
+        run: |
+          if ! test -f "${PROTOBUF}"; then
+              # https://github.com/lzhiyong/android-sdk-tools/issues/39#issuecomment-2298867750
+              patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
+              BUILD=${ROOT}/src/protobuf/build
+              rm -rf "${BUILD}" && mkdir -p "${BUILD}"
+              cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
+              ninja -C "${BUILD}" -j"$(nproc --all)"
+          fi
+
+      - name: Build
+        run: python build.py --build=build/${{matrix.target_arch}} --protoc="${PROTOBUF}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.target_arch }}
+          path: build/${{matrix.target_arch}}
