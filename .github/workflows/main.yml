@@ -59,7 +59,7 @@ jobs:
       - name: Build Host protobuf
         run: |
           cd ${ROOT}/src/protobuf
-          ./autogen.sh
+          autoreconf -f -i -Wall
           make -j"$(nproc)"
           sudo make install
           sudo ldconfig
