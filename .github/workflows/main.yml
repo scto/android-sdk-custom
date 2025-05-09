@@ -59,8 +59,13 @@ jobs:
       - name: Build Host protobuf
         run: |
           cd ${ROOT}/src/protobuf
-          autoupdate
-          autoreconf -f -i -Wall
+          aclocal
+          libtoolize
+          autoheader
+          automake --add-missing
+          autoconf
+          autoreconf
+          ./configure
           make -j"$(nproc)"
           sudo make install
           sudo ldconfig
