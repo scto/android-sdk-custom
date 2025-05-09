@@ -59,6 +59,7 @@ jobs:
       - name: Build Host protobuf
         run: |
           if ! test -f "${PROTOBUF}"; then
+              patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
               BUILD="${ROOT}/src/protobuf/build"
               rm -rf "${BUILD}" && mkdir -p "${BUILD}"
               cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
