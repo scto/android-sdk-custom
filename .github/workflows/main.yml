@@ -13,38 +13,67 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        target_arch: [x86_64, x86, arm64-v8a, armeabi-v7a]
       fail-fast: false
+      matrix:
+        include:
+          - target_arch: arm
+            target_triple: arm-linux-musleabi
+          - target_arch: armhf
+            target_triple: arm-linux-musleabihf
+          - target_arch: arm64
+            target_triple: aarch64-linux-musl
+          - target_arch: loongarch64
+            target_triple: loongarch64-linux-musl
+          - target_arch: riscv32
+            target_triple: riscv32-linux-musl
+          - target_arch: riscv64
+            target_triple: riscv64-linux-musl
+          - target_arch: x86
+            target_triple: x86-linux-musl
+          - target_arch: x86_64
+            target_triple: x86_64-linux-musl
     env:
-      ROOT: ${{github.workspace}}
-      PROTOBUF: ${{github.workspace}}/src/protobuf/build/protoc
+      ROOT: ${{ github.workspace }}
+      PROTOBUF: ${{ github.workspace }}/src/protobuf/build/protoc
+      ZIG_TARGET: ${{ matrix.target_triple }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get Sources
-        run: python get_source.py --tags ${{ inputs.tag }}
-          
-      - name: Install Dependencies
-        run: sudo apt install ninja-build
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v1.2.1
+        with:
+          version: "0.15.0-dev.137+db7db4802"
+          use-cache: false
 
-      - name: Build protobuf
+      - name: Setup Zig Toolchain
+        run: |
+          cd ${{ github.workspace }}
+          git clone https://github.com/HomuHomu833/zig-as-llvm
+
+      - name: Get Sources
+        run: python get_source.py --tags "${{ inputs.tag }}"
+
+      - name: Install Dependencies
+        run: sudo apt update && sudo apt install -y ninja-build zip
+
+      - name: Build Host protobuf
         run: |
           if ! test -f "${PROTOBUF}"; then
-              # https://github.com/lzhiyong/android-sdk-tools/issues/39#issuecomment-2298867750
-              # patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
-              BUILD=${ROOT}/src/protobuf/build
+              BUILD="${ROOT}/src/protobuf/build"
               rm -rf "${BUILD}" && mkdir -p "${BUILD}"
               cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
               ninja -C "${BUILD}" -j"$(nproc --all)"
           fi
 
-      - name: Build
-        run: python build.py --build=build/${{matrix.target_arch}} --protoc="${PROTOBUF}"
+      - name: Build Packages
+        run: |
+          chmod +x build.sh
+          ./build.sh --toolchain ${{ github.workspace }}/zig-as-llvm --protoc $PROTOBUF
 
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.target_arch }}
-          path: build/${{matrix.target_arch}}
+          path: build
