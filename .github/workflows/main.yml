@@ -59,7 +59,12 @@ jobs:
       - name: Build Host protobuf
         run: |
           cd ${ROOT}/src/protobuf
-          ./autogen.sh
+          aclocal
+          libtoolize
+          autoheader
+          automake --add-missing
+          autoconf
+          autoreconf
           ./configure
           make -j"$(nproc)"
           sudo make install
