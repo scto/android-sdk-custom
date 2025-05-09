@@ -33,7 +33,7 @@ jobs:
         run: |
           if ! test -f "${PROTOBUF}"; then
               # https://github.com/lzhiyong/android-sdk-tools/issues/39#issuecomment-2298867750
-              patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
+              # patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
               BUILD=${ROOT}/src/protobuf/build
               rm -rf "${BUILD}" && mkdir -p "${BUILD}"
               cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
