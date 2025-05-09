@@ -34,9 +34,7 @@ jobs:
             target_triple: x86_64-linux-musl
     env:
       ROOT: ${{ github.workspace }}
-      PROTOBUF: ${{ github.workspace }}/src/protobuf/build/protoc
       ZIG_TARGET: ${{ matrix.target_triple }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -60,17 +58,17 @@ jobs:
 
       - name: Build Host protobuf
         run: |
-          if ! test -f "${PROTOBUF}"; then
-              BUILD="${ROOT}/src/protobuf/build"
-              rm -rf "${BUILD}" && mkdir -p "${BUILD}"
-              cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
-              ninja -C "${BUILD}" -j"$(nproc --all)"
-          fi
+          cd ${ROOT}/src/protobuf
+          ./autogen.sh
+          ./configure
+          make -j"$(nproc)"
+          sudo make install
+          sudo ldconfig
 
       - name: Build Packages
         run: |
           chmod +x build.sh
-          ./build.sh --toolchain ${{ github.workspace }}/zig-as-llvm --protoc $PROTOBUF
+          ./build.sh --toolchain ${{ github.workspace }}/zig-as-llvm --protoc $(command -v protoc)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
