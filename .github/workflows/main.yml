@@ -58,17 +58,12 @@ jobs:
 
       - name: Build Host protobuf
         run: |
-          cd ${ROOT}/src/protobuf
-          aclocal
-          libtoolize
-          autoheader
-          automake --add-missing
-          autoconf
-          autoreconf
-          ./configure
-          make -j"$(nproc)"
-          sudo make install
-          sudo ldconfig
+          if ! test -f "${PROTOBUF}"; then
+              BUILD="${ROOT}/src/protobuf/build"
+              rm -rf "${BUILD}" && mkdir -p "${BUILD}"
+              cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
+              ninja -C "${BUILD}" -j"$(nproc --all)"
+          fi
 
       - name: Build Packages
         run: |
