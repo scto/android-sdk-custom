@@ -54,7 +54,7 @@ jobs:
         run: python get_source.py --tags "${{ inputs.tag }}"
 
       - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y golang ninja-build autogen autoconf autoconf-archive libtool build-essential qemu-user-static nasm
+        run: sudo apt update && sudo apt install -y golang ninja-build autogen autoconf autoconf-archive m4 libtool build-essential qemu-user-static nasm
 
       - name: Build Host protobuf
         run: |
