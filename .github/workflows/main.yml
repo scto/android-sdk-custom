@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -59,13 +59,7 @@ jobs:
       - name: Build Host protobuf
         run: |
           cd ${ROOT}/src/protobuf
-          aclocal
-          libtoolize
-          autoheader
-          automake --add-missing
-          autoconf
-          autoreconf
-          ./configure
+          ./autogen.sh
           make -j"$(nproc)"
           sudo make install
           sudo ldconfig
