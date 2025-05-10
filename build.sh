@@ -73,6 +73,7 @@ build() {
         -B "$build_dir"
         -DCMAKE_SYSTEM_NAME=Linux
         -DCMAKE_CROSSCOMPILING=True
+        -DCMAKE_PREFIX_PATH="$(pwd)/extrabuild"
         -DCMAKE_C_COMPILER="$toolchain/bin/cc"
         -DCMAKE_CXX_COMPILER="$toolchain/bin/c++"
         -DCMAKE_ASM_COMPILER="$toolchain/bin/cc"
