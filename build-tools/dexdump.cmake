@@ -23,6 +23,7 @@ set(INCLUDES
     ${SRC}/logging/liblog/include
     ${SRC}/libbase/include
     ${SRC}/libziparchive/include
+    ${SRC}/../include
     )
 
 add_library(libartbase STATIC
