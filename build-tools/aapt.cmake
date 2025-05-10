@@ -28,6 +28,7 @@ set(INCLUDES
     ${SRC}/soong/cc/libbuildversion/include
     ${SRC}/incremental_delivery/incfs/util/include 
     ${SRC}/incremental_delivery/incfs/kernel-headers
+    ${CMAKE_PREFIX_PATH}/include
     )
 
 add_library(libaapt STATIC
