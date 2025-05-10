@@ -33,7 +33,6 @@ jobs:
           - target_arch: x86_64
             target_triple: x86_64-linux-musl
     env:
-      ROOT: ${{ github.workspace }}
       ZIG_TARGET: ${{ matrix.target_triple }}
     steps:
       - name: Checkout
@@ -59,19 +58,28 @@ jobs:
       - name: Build Host protobuf
         run: |
           if ! test -f "${PROTOBUF}"; then
-              patch -up1 <"${ROOT}/patches/protobuf_CMakeLists.txt.patch"
-              BUILD="${ROOT}/src/protobuf/build"
+              patch -up1 <"${{ github.workspace }}/patches/protobuf_CMakeLists.txt.patch"
+              BUILD="${{ github.workspace }}/src/protobuf/build"
               rm -rf "${BUILD}" && mkdir -p "${BUILD}"
-              cmake -S"${ROOT}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
+              cmake -S"${{ github.workspace }}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
               ninja -C "${BUILD}" -j"$(nproc --all)"
           fi
 
       - name: Build ZLIB
         run: |
-           curl -LkSs https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz | xz -d | tar -x
-           cd zlib-1.3.1
-           ./configure --prefix="$(pwd)/../extrabuild" --static
-           make -j"$(nproc --all)" install
+          TOOLCHAIN=${{ github.workspace }}/zig-as-llvm
+          export CC=${TOOLCHAIN}/bin/cc
+          export CXX=${TOOLCHAIN}/bin/c++
+          export CFLAGS="-fsanitize=undefined"
+          export CXXFLAGS="-fsanitize=undefined"
+          export LD=${TOOLCHAIN}/bin/ld
+          export OBJCOPY=${TOOLCHAIN}/bin/objcopy
+          export AR=${TOOLCHAIN}/bin/ar
+          export STRIP=${TOOLCHAIN}/bin/strip
+          curl -LkSs https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz | xz -d | tar -x
+          cd zlib-1.3.1
+          ./configure --prefix="$(pwd)/../extrabuild" --static
+          make -j"$(nproc --all)" install
 
       - name: Build Packages
         run: |
