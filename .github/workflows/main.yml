@@ -81,6 +81,15 @@ jobs:
           sed -i '/extern "C" {/a\
           #ifndef TEMP_FAILURE_RETRY\n#define TEMP_FAILURE_RETRY(expression) (({ long int __result; do __result = (long int)(expression); while (__result == -1 && errno == EINTR); __result; }))\n#endif
           ' ${PWD}/src/core/libcutils/uevent.cpp
+          sed -i '/struct msghdr hdr = {/,+1c\
+              struct msghdr hdr = {};\
+              hdr.msg_name = &addr;\
+              hdr.msg_namelen = sizeof(addr);\
+              hdr.msg_iov = &iov;\
+              hdr.msg_iovlen = 1;\
+              hdr.msg_control = static_cast<void*>(control);\
+              hdr.msg_controllen = sizeof(control);
+          ' ${PWD}/src/core/libcutils/uevent.cpp
           sed -i '/#include "uio.h"/a #include <atomic>' ${PWD}/src/logging/liblog/logger.h
           sed -i 's/static atomic_int pmsg_fd;/static std::atomic<int> pmsg_fd{0};/' ${PWD}/src/logging/liblog/pmsg_writer.cpp
           sed -i 's|#include <stdatomic.h>|#include <atomic>|' ${PWD}/src/logging/liblog/logd_reader.cpp ${PWD}/src/logging/liblog/logd_writer.cpp ${PWD}/src/logging/liblog/logger.h
