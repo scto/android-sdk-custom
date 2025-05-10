@@ -107,6 +107,11 @@ build() {
         ninja -C "$build_dir" "$target" -j "$jobs"
     fi
 
+    if [ $? -ne 0 ]; then
+        echo -e "\033[1;31mBuild failed!\033[0m"
+        exit 1
+    fi
+
     complete_build "$toolchain" "$build_dir"
 
     local end_time=$(date +%s)
