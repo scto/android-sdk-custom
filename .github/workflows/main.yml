@@ -22,8 +22,6 @@ jobs:
             target_triple: arm-linux-musleabihf
           - target_arch: arm64
             target_triple: aarch64-linux-musl
-          - target_arch: loongarch64
-            target_triple: loongarch64-linux-musl
           - target_arch: riscv32
             target_triple: riscv32-linux-musl
           - target_arch: riscv64
@@ -41,7 +39,7 @@ jobs:
       - name: Setup Zig
         uses: mlugg/setup-zig@v1.2.1
         with:
-          version: "0.15.0-dev.479+6eb5e5630"
+          version: "0.14.0"
           use-cache: false
 
       - name: Setup Zig Toolchain
