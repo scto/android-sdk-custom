@@ -117,9 +117,11 @@ jobs:
 
           sed -i '/#elif defined(OPENSSL_RISCV64)/a \#elif defined(OPENSSL_LOONG64)\n\#define EXPECTED_NR_getrandom 278' ${PWD}/src/boringssl/src/crypto/fipsmodule/rand/getrandom_fillin.h
           sed -i '/#elif defined(__MIPSEL__) && !defined(__LP64__)/i \#elif defined(__loongarch64)\n\#define OPENSSL_64_BIT\n\#define OPENSSL_LOONG64' ${PWD}/src/boringssl/src/include/openssl/target.h
-          sed '/#include "trace-dev.inc"/a\
-          #define PROP_NAME_MAX 32
-          ' ${PWD}/src/core/libcutils/trace-dev.cpp
+          sed -i '/#define LOG_TAG "cutils-trace"/a\
+          #ifndef PROP_NAME_MAX\
+          #define PROP_NAME_MAX 32\
+          #endif
+          ' ${PWD}/src/core/libcutils/trace-dev.inc
 
           mkdir -p "${PWD}/src/core/libcutils/include/linux" && cat <<'EOF' > "${PWD}/src/core/libcutils/include/linux/ashmem.h"
           /* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
