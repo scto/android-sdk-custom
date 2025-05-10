@@ -87,15 +87,8 @@ build() {
         -Dprotobuf_BUILD_TESTS=OFF
         -DABSL_PROPAGATE_CXX_STD=ON
         -DCMAKE_BUILD_TYPE=MinSizeRel
+        -DPROTOC_PATH=$protoc
     )
-
-    if [ -n "$protoc" ]; then
-        if [ ! -f "$protoc" ]; then
-            echo "Error: protoc not found at $protoc"
-            exit 1
-        fi
-        cmd+=("-DPROTOC_PATH=$protoc")
-    fi
 
     "${cmd[@]}"
 
