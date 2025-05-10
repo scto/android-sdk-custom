@@ -127,6 +127,8 @@ jobs:
           #endif
           ' ${PWD}/src/core/libcutils/trace-dev.inc
 
+          sed -i 's|#include "ApkInfo\.pb\.h"|#include "ApkInfo.h"|' ${PWD}/src/base/tools/aapt2/dump/DumpManifest.h
+
       - name: Build ZLIB
         run: |
           TOOLCHAIN=${{ github.workspace }}/zig-as-llvm
