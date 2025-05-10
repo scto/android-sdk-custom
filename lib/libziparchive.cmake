@@ -35,4 +35,5 @@ target_include_directories(libziparchive PRIVATE
     ${SRC}/libbase/include 
     ${SRC}/logging/liblog/include
     ${SRC}/googletest/googletest/include
+    ${CMAKE_PREFIX_PATH}/include
     )
