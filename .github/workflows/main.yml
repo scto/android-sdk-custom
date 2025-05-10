@@ -157,7 +157,7 @@ jobs:
           export AR=${TOOLCHAIN}/bin/ar
           export STRIP=${TOOLCHAIN}/bin/strip
           curl -LkSs https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz | gzip -d | tar -x
-          cd bzip-1.0.8
+          cd bzip2-1.0.8
           make CC=$CC AR=$AR PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
 
       - name: Build Packages
