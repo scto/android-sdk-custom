@@ -167,6 +167,8 @@ jobs:
 
           sed -i '/#include "os.h"/a \#ifndef __GLIBC__\n#include <sys/cachectl.h>\n#endif' ${PWD}/src/art/libartbase/base/utils.cc
 
+          sed -i '/#include <atomic>/i #include <future>' ${PWD}/src/adb/client/openscreen/platform/task_runner.h
+
       - name: Build ZLIB
         run: |
           TOOLCHAIN=${{ github.workspace }}/zig-as-llvm
