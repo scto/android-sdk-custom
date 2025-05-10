@@ -53,7 +53,10 @@ add_library(libopenscreen STATIC
     )
 
 target_compile_options(libopenscreen PRIVATE 
+    -fno-exceptions
+    -fno-unwind-tables
     -fno-strict-aliasing
+    -fno-asynchronous-unwind-tables
     -Wno-address-of-packed-member
     -Wno-array-bounds
     -Wno-pointer-sign
@@ -62,13 +65,6 @@ target_compile_options(libopenscreen PRIVATE
     -Wno-unused-parameter
     -Wno-missing-field-initializers
     -Werror=implicit-function-declaration
-    )
-
-target_compile_options(libopenscreen PRIVATE 
-    -std=c++17
-    -fno-exceptions 
-    -fno-unwind-tables 
-    -fno-asynchronous-unwind-tables
     )
 
 target_include_directories(libopenscreen PRIVATE
