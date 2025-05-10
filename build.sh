@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 format_time() {
     local T=$1
     local H=$((T/3600))
