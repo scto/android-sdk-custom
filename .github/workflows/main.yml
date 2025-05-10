@@ -155,7 +155,7 @@ jobs:
           \
           #define ART_STACK_OVERFLOW_GAP_arm 16384\
           #define ART_STACK_OVERFLOW_GAP_arm64 16384\
-          #define ART_STACK_OVERFLOW_GAP_riscv64=16384\
+          #define ART_STACK_OVERFLOW_GAP_riscv64 16384\
           #define ART_STACK_OVERFLOW_GAP_x86 16384\
           #define ART_STACK_OVERFLOW_GAP_x86_64 20480\
           \
