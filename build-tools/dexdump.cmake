@@ -24,6 +24,7 @@ set(INCLUDES
     ${SRC}/libbase/include
     ${SRC}/libziparchive/include
     ${SRC}/../include
+    ${CMAKE_PREFIX_PATH}/include
     )
 
 add_library(libartbase STATIC
