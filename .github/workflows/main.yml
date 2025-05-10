@@ -163,7 +163,7 @@ jobs:
       - name: Build Packages
         run: |
           chmod +x build.sh
-          ./build.sh "${{ github.workspace }}/zig-as-llvm" "$(command -v protoc)" --build "build" --jobs "$(nproc)"
+          ./build.sh "${{ github.workspace }}/zig-as-llvm" "${{github.workspace}}/src/protobuf/build/protoc" --build "build" --jobs "$(nproc)"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
