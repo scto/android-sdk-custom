@@ -145,6 +145,21 @@ jobs:
           ./configure --prefix="$(pwd)/../extrabuild" --static
           make -j"$(nproc --all)" install
 
+      - name: Build BZip2
+        run: |
+          TOOLCHAIN=${{ github.workspace }}/zig-as-llvm
+          export CC=${TOOLCHAIN}/bin/cc
+          export CXX=${TOOLCHAIN}/bin/c++
+          export CFLAGS="-fsanitize=undefined"
+          export CXXFLAGS="-fsanitize=undefined"
+          export LD=${TOOLCHAIN}/bin/ld
+          export OBJCOPY=${TOOLCHAIN}/bin/objcopy
+          export AR=${TOOLCHAIN}/bin/ar
+          export STRIP=${TOOLCHAIN}/bin/strip
+          curl -LkSs https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz | gzip -d | tar -x
+          cd bzip-1.0.8
+          make CC=$CC AR=$AR PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
+
       - name: Build Packages
         run: |
           chmod +x build.sh
