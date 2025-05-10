@@ -85,5 +85,5 @@ target_include_directories(libselinux PRIVATE
     ${SRC}/logging/liblog/include 
     ${SRC}/core/libpackagelistparser/include
     ${SRC}/pcre/include
-    ${SRC}/include
+    ${SRC}/../include
     )
