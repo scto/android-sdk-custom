@@ -113,30 +113,4 @@ build() {
     echo -e "\033[1;32mbuild success cost time: $(format_time "$duration")\033[0m"
 }
 
-usage() {
-    echo "Usage: $0 --toolchain <path> --protoc <path> [--build <dir>] [--job <n>] [--target <target>]"
-    exit 1
-}
-
-BUILD_DIR="build"
-JOBS=$(nproc)
-TARGET="all"
-PROTOC=""
-
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --toolchain) TOOLCHAIN="$2"; shift ;;
-        --protoc) PROTOC="$2"; shift ;;
-        --build) BUILD_DIR="$2"; shift ;;
-        --job) JOBS="$2"; shift ;;
-        --target) TARGET="$2"; shift ;;
-        *) usage ;;
-    esac
-    shift
-done
-
-if [[ -z "$TOOLCHAIN" || -z "$PROTOC" ]]; then
-    usage
-fi
-
-build "$TOOLCHAIN" "$BUILD_DIR" "$JOBS" "$TARGET" "$PROTOC"
+build $1 "build" "$(nproc)" "all" $2
