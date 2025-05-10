@@ -26,4 +26,5 @@ add_library(libsparse STATIC
 target_include_directories(libsparse PRIVATE
     ${SRC}/core/libsparse/include 
     ${SRC}/libbase/include
+    ${CMAKE_PREFIX_PATH}/include
     )
