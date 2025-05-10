@@ -74,6 +74,10 @@ jobs:
           #ifndef PAGE_SIZE\
           #define PAGE_SIZE 4096\
           #endif' ${PWD}/src/logging/liblog/logger.h
+          sed -i '/__END_DECLS/i\
+          #ifndef TEMP_FAILURE_RETRY\n\
+          #define TEMP_FAILURE_RETRY(expression) (({ long int __result; do __result = (long int)(expression); while (__result == -1 && errno == EINTR); __result; }))\n\
+          #endif\n' ${PWD}/src/core/libcutils/include/cutils/klog.h
           sed -i '/#include "uio.h"/a #include <atomic>' ${PWD}/src/logging/liblog/logger.h
           sed -i 's/static atomic_int pmsg_fd;/static std::atomic<int> pmsg_fd{0};/' ${PWD}/src/logging/liblog/pmsg_writer.cpp
           sed -i 's|#include <stdatomic.h>|#include <atomic>|' ${PWD}/src/logging/liblog/logd_reader.cpp ${PWD}/src/logging/liblog/logd_writer.cpp ${PWD}/src/logging/liblog/logger.h
