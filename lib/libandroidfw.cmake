@@ -70,6 +70,7 @@ target_include_directories(libandroidfw PUBLIC
     ${SRC}/libziparchive/include
     ${SRC}/incremental_delivery/incfs/util/include
     ${SRC}/incremental_delivery/incfs/kernel-headers
+    ${CMAKE_PREFIX_PATH}/include
     )
     
 target_link_libraries(libandroidfw PUBLIC fmt::fmt)
