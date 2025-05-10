@@ -79,12 +79,11 @@ target_compile_definitions(libselinux PRIVATE
     
 target_include_directories(libselinux PRIVATE
     ${SRC}/selinux/libselinux/include 
+    ${SRC}/selinux/libselinux/src
     ${SRC}/selinux/libsepol/include
     ${SRC}/core/libcutils/include
     ${SRC}/logging/liblog/include 
     ${SRC}/core/libpackagelistparser/include
     ${SRC}/pcre/include
-    )
-target_include_directories(libselinux PRIVATE
-    ${SRC}/selinux/libselinux/src
+    ${SRC}/include
     )
