@@ -22,8 +22,7 @@ package_dir() {
 
 complete_build() {
     local toolchain="$1"
-    local abi="$2"
-    local build_dir="$3"
+    local build_dir="$2"
 
     local binary_dir="$build_dir/bin"
     local strip="$toolchain/bin/strip"
@@ -107,7 +106,7 @@ build() {
         ninja -C "$build_dir" "$target" -j "$jobs"
     fi
 
-    complete_build "$toolchain" "$abi" "$build_dir"
+    complete_build "$toolchain" "$build_dir"
 
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
@@ -115,7 +114,7 @@ build() {
 }
 
 usage() {
-    echo "Usage: $0 --toolchain <path> --protoc <path> [--build <dir>] [--job <n>] [--target <t>]"
+    echo "Usage: $0 --toolchain <path> --protoc <path> [--build <dir>] [--job <n>] [--target <target>]"
     exit 1
 }
 
@@ -140,4 +139,4 @@ if [[ -z "$TOOLCHAIN" || -z "$PROTOC" ]]; then
     usage
 fi
 
-build "$TOOLCHAIN" "$API" "$BUILD_DIR" "$JOBS" "$TARGET" "$PROTOC"
+build "$TOOLCHAIN" "$BUILD_DIR" "$JOBS" "$TARGET" "$PROTOC"
