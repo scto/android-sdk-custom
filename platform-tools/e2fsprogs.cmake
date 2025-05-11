@@ -223,7 +223,7 @@ target_link_libraries(mke2fs
     libsparse 
     libbase 
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
 
 # e2fsdroid
@@ -250,5 +250,5 @@ target_link_libraries(e2fsdroid
     liblog
     pcre2-8
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
