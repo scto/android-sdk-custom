@@ -53,6 +53,7 @@ add_library(libselinux STATIC
     ${SRC}/selinux/libselinux/src/procattr.c
     ${SRC}/selinux/libselinux/src/regex.c
     ${SRC}/selinux/libselinux/src/reject_unknown.c
+    ${SRC}/selinux/libselinux/src/selinux_config.c
     ${SRC}/selinux/libselinux/src/selinux_internal.c
     ${SRC}/selinux/libselinux/src/sestatus.c
     ${SRC}/selinux/libselinux/src/setenforce.c
