@@ -101,8 +101,7 @@ target_link_libraries(fastboot
     libsepol 
     liblog
     crypto
-    pcre2-8 
-    c++_static
+    pcre2-8
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
