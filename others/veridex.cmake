@@ -30,6 +30,7 @@ target_include_directories(veridex PRIVATE
     ${SRC}/logging/liblog/include
     ${SRC}/libbase/include
     ${SRC}/libziparchive/include
+    ${SRC}/../include
     )
 
 target_link_libraries(veridex 
