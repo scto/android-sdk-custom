@@ -75,11 +75,6 @@ jobs:
 
           if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
-          elif [[ "${{ matrix.target_triple }}" == *"cosmo"* ]]; then
-            TOOLCHAIN="/home/runner/work/_temp/cosmocc-4.0.2"
-          fi
-
-          if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
             export CFLAGS="-fsanitize=undefined"
@@ -256,6 +251,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
+            TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
             export CFLAGS="-fsanitize=undefined -DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
