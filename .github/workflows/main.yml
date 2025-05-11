@@ -174,7 +174,7 @@ jobs:
 
           sed -i '/#if __has_feature(cxx_exceptions)/,/^#endif/ c\using Task = std::packaged_task<void()>;' ${PWD}/src/openscreen/platform/api/task_runner.h
 
-          sed '/^  return dex::ProtoIndex(it.GetJavaValue().i);$/a\
+          sed -i '/^  return dex::ProtoIndex(it.GetJavaValue().i);$/a\
           \
           std::ostream& operator<<(std::ostream& os, EncodedArrayValueIterator::ValueType rhs) {\
             switch (rhs) {\
