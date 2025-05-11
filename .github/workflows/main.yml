@@ -84,11 +84,11 @@ jobs:
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
           elif [[ "${{ matrix.target_triple }}" == *"cosmo"* ]]; then
-            export CC=${{matrix.target}}-cc
-            export CXX=${{matrix.target}}-c++
-            export LD=${{matrix.target}}-ld
-            export OBJCOPY=${{matrix.target}}-objcopy
-            export AR=${{matrix.target}}-ar
+            export CC=${{matrix.target_tripple}}-cc
+            export CXX=${{matrix.target_tripple}}-c++
+            export LD=${{matrix.target_tripple}}-ld
+            export OBJCOPY=${{matrix.target_tripple}}-objcopy
+            export AR=${{matrix.target_tripple}}-ar
             export STRIP="echo $@"
           fi
           curl -LkSs https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz | xz -d | tar -x
@@ -261,13 +261,13 @@ jobs:
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
           elif [[ "${{ matrix.target_triple }}" == *"cosmo"* ]]; then
-            export CC=${{matrix.target}}-cc
-            export CXX=${{matrix.target}}-c++
+            export CC=${{matrix.target_tripple}}-cc
+            export CXX=${{matrix.target_tripple}}-c++
             export CFLAGS="-DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -static"
             export CXXFLAGS="-DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -static"
-            export LD=${{matrix.target}}-ld
-            export OBJCOPY=${{matrix.target}}-objcopy
-            export AR=${{matrix.target}}-ar
+            export LD=${{matrix.target_tripple}}-ld
+            export OBJCOPY=${{matrix.target_tripple}}-objcopy
+            export AR=${{matrix.target_tripple}}-ar
             export STRIP="echo $@"
           fi
 
