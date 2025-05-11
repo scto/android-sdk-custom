@@ -213,6 +213,5 @@ target_link_libraries(aapt2
     ssl
     pcre2-8
     png_static
-    c++_static
     dl
     )
