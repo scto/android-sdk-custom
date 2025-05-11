@@ -50,7 +50,7 @@ target_link_libraries(make_f2fs
     libbase
     libsparse
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
     
 add_executable(make_f2fs_casefold 
@@ -73,7 +73,7 @@ target_link_libraries(make_f2fs_casefold
     libbase
     libsparse
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
 
 add_executable(sload_f2fs
@@ -114,6 +114,6 @@ target_link_libraries(sload_f2fs
     pcre2-8
     lz4_static
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
     
