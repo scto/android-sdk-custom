@@ -342,10 +342,11 @@ jobs:
               local target="$3"
               local protoc="$4"
 
-              cmake --trace-expand --debug-output -GNinja \
+              cmake -GNinja \
                   -B "$build_dir" \
                   -DCMAKE_SYSTEM_NAME=Linux \
                   -DCMAKE_CROSSCOMPILING=True \
+                  -DCMAKE_SYSTEM_PROCESSOR=${{ matrix.target_arch }} \
                   -DCMAKE_PREFIX_PATH="$(pwd)/extrabuild" \
                   -DCMAKE_C_COMPILER="$CC" \
                   -DCMAKE_CXX_COMPILER="$CXX" \
