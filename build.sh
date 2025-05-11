@@ -28,7 +28,7 @@ complete_build() {
     local strip="$toolchain/bin/strip"
 
     declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
-    declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold)
+    declare -a platform_tools=(sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold)
     declare -a other_tools=(veridex)
 
     for dir in build-tools platform-tools others; do
