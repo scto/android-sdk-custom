@@ -58,7 +58,7 @@ jobs:
           version: "4.0.2"
 
       - name: Get Sources
-        run: python get_source.py --tags "${{ inputs.tag }}"
+        run: python get_source.py --tags "${{ inputs.tag }}" && find | grep CMakeLists.txt
 
       - name: Install Dependencies
         run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential
