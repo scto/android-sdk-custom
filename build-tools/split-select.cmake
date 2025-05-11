@@ -56,8 +56,7 @@ target_link_libraries(split-select
     pcre2-8
     jsoncpp_static
     png_static
-    c++_static
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
     
