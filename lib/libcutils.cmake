@@ -42,6 +42,7 @@ add_library(libcutils STATIC
     ${SRC}/core/libcutils/qtaguid.cpp
     ${SRC}/core/libcutils/trace-dev.cpp
     ${SRC}/core/libcutils/uevent.cpp
+    ${SRC}/faked_functions.cpp
     )
 
 target_compile_definitions(libcutils PRIVATE 
