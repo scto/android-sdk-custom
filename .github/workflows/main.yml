@@ -301,7 +301,7 @@ jobs:
               local binary_dir="$build_dir/bin"
 
               declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
-              declare -a platform_tools=(sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold)
+              declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold)
               declare -a other_tools=(veridex)
 
               for dir in build-tools platform-tools others; do
@@ -313,7 +313,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/build-tools/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$strip" -g "$binary_dir/build-tools/$tool"
+                        "$STRIP" -g "$binary_dir/build-tools/$tool"
                       fi
                   fi
               done
@@ -323,7 +323,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/platform-tools/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$strip" -g "$binary_dir/platform-tools/$tool"
+                        "$STRIP" -g "$binary_dir/platform-tools/$tool"
                       fi
                   fi
               done
@@ -333,7 +333,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/others/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$strip" -g "$binary_dir/others/$tool"
+                        "$STRIP" -g "$binary_dir/others/$tool"
                       fi
                   fi
               done
