@@ -81,8 +81,8 @@ build() {
         -DCMAKE_OBJCOPY="$toolchain/bin/objcopy"
         -DCMAKE_AR="$toolchain/bin/ar"
         -DCMAKE_STRIP="$toolchain/bin/strip"
-        -DCMAKE_C_FLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -static"
-        -DCMAKE_CXX_FLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -static"
+        -DCMAKE_C_FLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+        -DCMAKE_CXX_FLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
         -DCMAKE_EXE_LINKER_FLAGS="-static"
         -Dprotobuf_BUILD_TESTS=OFF
         -DABSL_PROPAGATE_CXX_STD=ON
