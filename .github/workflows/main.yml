@@ -161,6 +161,17 @@ jobs:
 
           sed -i '/#include "os.h"/a #include <sys/cachectl.h>' ${PWD}/src/art/libartbase/base/utils.cc
 
+          sed -i '/int r = cacheflush(start, limit, kCacheFlushFlags);/{
+          s/.*/#if defined(__arm__) \&\& !defined(__aarch64__)\
+          \
+            void* addr = reinterpret_cast<void*>(start);\
+            int size = static_cast<int>(limit - start);\
+            int r = cacheflush(addr, size, kCacheFlushFlags);\
+          #else\
+            int r = cacheflush(start, limit, kCacheFlushFlags);\
+          #endif/
+          }' ${PWD}/src/art/libartbase/base/utils.cc
+
           sed -i '/#include <atomic>/i #include <future>' ${PWD}/src/adb/client/openscreen/platform/task_runner.h
 
       - name: Build ZLIB
