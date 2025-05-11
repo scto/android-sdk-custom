@@ -65,8 +65,6 @@ if(DEFINED PROTOC_PATH)
     endif()
 endif()
 
-set(PNG_ARM_NEON "off" CACHE STRING "Disable ARM NEON in libpng")
-
 # thrid-party libraries
 add_subdirectory(src/boringssl EXCLUDE_FROM_ALL)
 add_subdirectory(src/fmtlib EXCLUDE_FROM_ALL)
