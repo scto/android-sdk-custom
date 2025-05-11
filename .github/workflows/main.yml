@@ -256,8 +256,8 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined -DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
-            export CXXFLAGS="-fsanitize=undefined -DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CXXFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
             export LD=${TOOLCHAIN}/bin/ld
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
@@ -265,8 +265,8 @@ jobs:
           elif [[ "${{ matrix.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{matrix.target_triple}}-cc
             export CXX=${{matrix.target_triple}}-c++
-            export CFLAGS="-DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -static"
-            export CXXFLAGS="-DPNG_ARM_NEON_OPT=0 -UPNG_ARM_NEON_IMPLEMENTATION -static"
+            export CFLAGS="-static"
+            export CXXFLAGS="-static"
             export LD=${{matrix.target_triple}}-ld
             export OBJCOPY=${{matrix.target_triple}}-objcopy
             export AR=${{matrix.target_triple}}-ar
