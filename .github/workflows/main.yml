@@ -310,7 +310,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/build-tools/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" -g "$binary_dir/build-tools/$tool"
+                        "$STRIP" -s "$binary_dir/build-tools/$tool"
                       fi
                   fi
               done
@@ -320,7 +320,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/platform-tools/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" -g "$binary_dir/platform-tools/$tool"
+                        "$STRIP" -s "$binary_dir/platform-tools/$tool"
                       fi
                   fi
               done
@@ -330,7 +330,7 @@ jobs:
                       cp "$binary_dir/$tool" "$binary_dir/others/"
                       rm "$binary_dir/$tool"
                       if [[ "${{ matrix.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" -g "$binary_dir/others/$tool"
+                        "$STRIP" -s "$binary_dir/others/$tool"
                       fi
                   fi
               done
