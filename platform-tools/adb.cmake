@@ -318,7 +318,6 @@ target_link_libraries(adb
     brotlienc-static
     libzstd_static
     lz4_static
-    c++_static
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
