@@ -37,7 +37,6 @@ target_link_libraries(zipalign
     libziparchive
     libzopfli
     liblog
-    c++_static
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
