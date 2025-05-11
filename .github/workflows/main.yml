@@ -161,7 +161,7 @@ jobs:
           \// host limit: 10000\
           #define ART_FRAME_SIZE_LIMIT 10000' ${PWD}/src/art/libartbase/arch/instruction_set.h
 
-          sed -i '/#include "os.h"/a \#ifndef __GLIBC__\n#include <sys/cachectl.h>\n#endif' ${PWD}/src/art/libartbase/base/utils.cc
+          sed -i '/#include "os.h"/a #include <sys/cachectl.h>' ${PWD}/src/art/libartbase/base/utils.cc
 
           sed -i '/#include <atomic>/i #include <future>' ${PWD}/src/adb/client/openscreen/platform/task_runner.h
 
