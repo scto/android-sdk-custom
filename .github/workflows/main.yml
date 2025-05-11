@@ -172,7 +172,7 @@ jobs:
           #endif/
           }' ${PWD}/src/art/libartbase/base/utils.cc
 
-          sed '/#if __has_feature(cxx_exceptions)/,/^#endif/ c\using Task = std::packaged_task<void()>;' ${PWD}/src/adb/client/openscreen/platform/task_runner.h
+          sed -i '/#if __has_feature(cxx_exceptions)/,/^#endif/ c\using Task = std::packaged_task<void()>;' ${PWD}/src/adb/client/openscreen/platform/task_runner.h
 
       - name: Build ZLIB
         run: |
