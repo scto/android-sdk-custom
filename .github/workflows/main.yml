@@ -103,7 +103,7 @@ jobs:
           cd ..
           curl -LkSs https://www.sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz | gzip -d | tar -x
           cd bzip2-1.0.8
-          make CC=$CC AR=$AR PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
+          make CC="$CC" AR="$AR" PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
           cd ..
 
       - name: Apply Patches
@@ -296,10 +296,8 @@ jobs:
           }
 
           complete_build() {
-              local toolchain="$1"
-              local build_dir="$2"
+              local build_dir="$1"
               local binary_dir="$build_dir/bin"
-              local strip="$toolchain/bin/strip"
 
               declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
               declare -a platform_tools=(sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold)
@@ -341,26 +339,25 @@ jobs:
           }
 
           build() {
-              local toolchain="$1"
-              local build_dir="$2"
-              local jobs="$3"
-              local target="$4"
-              local protoc="$5"
+              local build_dir="$1"
+              local jobs="$2"
+              local target="$3"
+              local protoc="$4"
 
               cmake -GNinja \
                   -B "$build_dir" \
                   -DCMAKE_SYSTEM_NAME=Linux \
                   -DCMAKE_CROSSCOMPILING=True \
                   -DCMAKE_PREFIX_PATH="$(pwd)/extrabuild" \
-                  -DCMAKE_C_COMPILER=$CC \
-                  -DCMAKE_CXX_COMPILER=$CXX \
-                  -DCMAKE_ASM_COMPILER=$CC \
-                  -DCMAKE_LINKER=$LD \
-                  -DCMAKE_OBJCOPY=$OBJCOPY \
-                  -DCMAKE_AR=$AR \
-                  -DCMAKE_STRIP=$STRIP \
-                  -DCMAKE_C_FLAGS=$CFLAGS \
-                  -DCMAKE_CXX_FLAGS=$CXXFLAGS \
+                  -DCMAKE_C_COMPILER="$CC" \
+                  -DCMAKE_CXX_COMPILER="$CXX" \
+                  -DCMAKE_ASM_COMPILER="$CC" \
+                  -DCMAKE_LINKER="$LD" \
+                  -DCMAKE_OBJCOPY="$OBJCOPY" \
+                  -DCMAKE_AR="$AR" \
+                  -DCMAKE_STRIP="$STRIP" \
+                  -DCMAKE_C_FLAGS="$CFLAGS" \
+                  -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
                   -Dprotobuf_BUILD_TESTS=OFF \
                   -DABSL_PROPAGATE_CXX_STD=ON \
                   -DCMAKE_BUILD_TYPE=MinSizeRel \
@@ -379,14 +376,14 @@ jobs:
                   exit 1
               fi
 
-              complete_build "$toolchain" "$build_dir"
+              complete_build "$build_dir"
 
               local end_time=$(date +%s)
               local duration=$((end_time - start_time))
               echo -e "\033[1;32mbuild success cost time: $(format_time "$duration")\033[0m"
           }
 
-          build $TOOLCHAIN "build" "$(nproc)" "all" "${{github.workspace}}/src/protobuf/build/protoc"
+          build "build" "$(nproc)" "all" "${{github.workspace}}/src/protobuf/build/protoc"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
