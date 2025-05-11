@@ -22,8 +22,6 @@ jobs:
             target_triple: arm-linux-musleabihf
           - target_arch: arm64
             target_triple: aarch64-linux-musl
-          - target_arch: riscv32
-            target_triple: riscv32-linux-musl
           - target_arch: riscv64
             target_triple: riscv64-linux-musl
           - target_arch: x86
