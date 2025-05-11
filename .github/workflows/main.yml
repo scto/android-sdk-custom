@@ -226,8 +226,6 @@ jobs:
           ' ${PWD}/src/art/libdexfile/dex/dex_file.cc
           sed -i 's/ \/\/__INSERT_HERE__//' ${PWD}/src/art/libdexfile/dex/dex_file.cc
 
-          sed -i '/#include "android-base\/properties.h"/a #undef __BIONIC__' ${PWD}/src/libbase/properties.cpp
-
       - name: Build Android SDK
         run: |
           chmod +x build.sh
