@@ -56,6 +56,7 @@ add_library(libselinux STATIC
     ${SRC}/selinux/libselinux/src/selinux_config.c
     ${SRC}/selinux/libselinux/src/selinux_internal.c
     ${SRC}/selinux/libselinux/src/sestatus.c
+    ${SRC}/selinux/libselinux/src/seusers.c
     ${SRC}/selinux/libselinux/src/setenforce.c
     ${SRC}/selinux/libselinux/src/setfilecon.c
     ${SRC}/selinux/libselinux/src/setrans_client.c
