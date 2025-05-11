@@ -346,7 +346,7 @@ jobs:
               local target="$3"
               local protoc="$4"
 
-              cmake -GNinja \
+              cmake --trace-expand --debug-output -GNinja \
                   -B "$build_dir" \
                   -DCMAKE_SYSTEM_NAME=Linux \
                   -DCMAKE_CROSSCOMPILING=True \
