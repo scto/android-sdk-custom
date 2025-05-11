@@ -22,8 +22,8 @@ set(CMAKE_CXX_STANDARD 20)
 enable_language(ASM)
 
 # set global cflags and cxxflags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON=0 -fcolor-diagnostics -Wno-attributes")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPNG_ARM_NEON=0 -fcolor-diagnostics -Wno-attributes")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics -Wno-attributes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics -Wno-attributes")
 # static link (may need some patches)
 #set(CMAKE_EXE_LINKER_FLAGS "-static")
 
@@ -64,6 +64,8 @@ if(DEFINED PROTOC_PATH)
         message(WARNING "${PTOTOBUF_VERSION}, the protobuf version is too high, may be incompatible!!")
     endif()
 endif()
+
+set(PNG_ARM_NEON "off" CACHE STRING "Disable ARM NEON in libpng")
 
 # thrid-party libraries
 add_subdirectory(src/boringssl EXCLUDE_FROM_ALL)
