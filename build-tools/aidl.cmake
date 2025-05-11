@@ -94,5 +94,4 @@ target_link_libraries(aidl
     liblog
     gmock
     fmt::fmt
-    c++_static
     )
