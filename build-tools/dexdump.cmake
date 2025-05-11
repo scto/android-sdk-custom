@@ -101,8 +101,7 @@ target_link_libraries(dexdump
     libbase
     libziparchive
     liblog
-    c++_static
     dl
-    z
+    ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
     
