@@ -28,6 +28,7 @@ target_include_directories(zipalign PRIVATE
     ${SRC}/zopfli/src
     ${SRC}/libbase/include
     ${SRC}/libziparchive/include
+    ${CMAKE_PREFIX_PATH}/include
     )
 
 target_link_libraries(zipalign 
