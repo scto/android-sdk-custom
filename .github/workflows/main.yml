@@ -247,9 +247,10 @@ jobs:
           ' ${PWD}/src/art/libdexfile/dex/dex_file.cc
           sed -i 's/ \/\/__INSERT_HERE__//' ${PWD}/src/art/libdexfile/dex/dex_file.cc
 
+          # fml 2
           if [[ "${{ matrix.target_triple }}" == *"cosmo"* ]]; then
             sed -i '/if(NOT CMAKE_SYSTEM_NAME STREQUAL "Android")/,/endif()/ s/^/#/' ${PWD}/src/boringssl/CMakeLists.txt
-            sed -i 's/^\s*find_package(Threads REQUIRED)/# &/' ${PWD}/src/zstd/build/cmake/CMakeLists.txt ${PWD}/src/abseil-cpp/CMakeLists.txt
+            sed -i 's/^\s*find_package(Threads REQUIRED)/# &/' ${PWD}/src/zstd/build/cmake/CMakeLists.txt ${PWD}/src/abseil-cpp/CMakeLists.txt ${PWD}/src/protobuf/CMakeLists.txt
           fi
 
       - name: Build Android SDK
