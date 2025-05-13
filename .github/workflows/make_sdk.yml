@@ -1,0 +1,16 @@
+name: Make SDK
+run-name: Make SDK ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Platform Tools Version"
+        required: true
+        default: "35.0.2"
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      name: ${{ inputs.version }}
