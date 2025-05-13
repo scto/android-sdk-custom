@@ -70,7 +70,9 @@ jobs:
       run: |
         mkdir android-sdk
         cd android-sdk
-        curl -LkSs https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip | unzip -q
+        curl -LkSs -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+        unzip -q commandlinetools.zip
+        rm commandlinetools.zip
         cmdline-tools/bin/sdkmanager --sdk_root=. --licenses | yes
         cmdline-tools/bin/sdkmanager --sdk_root=. "build-tools;35.0.1" "platform-tools"
 
