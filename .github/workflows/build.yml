@@ -284,45 +284,30 @@ jobs:
 
           complete_build() {
               local build_dir="$1"
-              local binary_dir="$build_dir/bin"
 
               declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
               declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold dmtracedump)
               declare -a other_tools=(veridex)
 
-              for dir in build-tools platform-tools others; do
-                  mkdir -p "$binary_dir/$dir"
-              done
+              if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
+                   for tool in "${build_tools[@]}"; do
+                       if [ -f "$binary_dir/$tool" ]; then
+                           "$STRIP" "$binary_dir/$tool"
+                       fi
+                   done
 
-              for tool in "${build_tools[@]}"; do
-                  if [ -f "$binary_dir/$tool" ]; then
-                      cp "$binary_dir/$tool" "$binary_dir/build-tools/"
-                      rm "$binary_dir/$tool"
-                      if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" "$binary_dir/build-tools/$tool"
-                      fi
-                  fi
-              done
+                   for tool in "${platform_tools[@]}"; do
+                       if [ -f "$binary_dir/$tool" ]; then
+                           "$STRIP" "$binary_dir/$tool"
+                       fi
+                   done
 
-              for tool in "${platform_tools[@]}"; do
-                  if [ -f "$binary_dir/$tool" ]; then
-                      cp "$binary_dir/$tool" "$binary_dir/platform-tools/"
-                      rm "$binary_dir/$tool"
-                      if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" "$binary_dir/platform-tools/$tool"
-                      fi
-                  fi
-              done
-
-              for tool in "${other_tools[@]}"; do
-                  if [ -f "$binary_dir/$tool" ]; then
-                      cp "$binary_dir/$tool" "$binary_dir/others/"
-                      rm "$binary_dir/$tool"
-                      if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-                        "$STRIP" "$binary_dir/others/$tool"
-                      fi
-                  fi
-              done
+                   for tool in "${other_tools[@]}"; do
+                       if [ -f "$binary_dir/$tool" ]; then
+                           "$STRIP" "$binary_dir/$tool"
+                       fi
+                   done
+               fi
           }
 
           build() {
