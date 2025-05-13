@@ -1,5 +1,4 @@
 name: Build
-run-name: Build for ${{ matrix.target_arch }}
 
 on:
   workflow_call:
@@ -10,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build for ${{ matrix.target_arch }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
