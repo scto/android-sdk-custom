@@ -24,8 +24,7 @@ enable_language(ASM)
 # set global cflags and cxxflags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics -Wno-attributes")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics -Wno-attributes")
-# static link (may need some patches)
-#set(CMAKE_EXE_LINKER_FLAGS "-static")
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 # platform tools version
 # see the patches/other/platform_tools_version.h
