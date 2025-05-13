@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    name: Build for ${{ inputs.target_arch }}
+    name: ${{ inputs.target_arch }}
     runs-on: ubuntu-24.04
     env:
       ZIG_TARGET: ${{ inputs.target_triple }}
