@@ -1,16 +1,12 @@
 name: Build
+run-name: Build ${{ matrix.target_arch }}
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Specific Branches or Tags"
-        required: true
-        default: "platform-tools-35.0.2"
+  workflow_call:
 
 jobs:
   build:
-    name: build
+    name: Build
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
