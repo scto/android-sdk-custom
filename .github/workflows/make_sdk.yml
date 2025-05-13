@@ -11,6 +11,87 @@ on:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target_arch: armel
+            target_triple: arm-linux-musleabi
+          - target_arch: armhf
+            target_triple: arm-linux-musleabihf
+          - target_arch: aarch64
+            target_triple: aarch64-linux-musl
+          - target_arch: riscv64
+            target_triple: riscv64-linux-musl
+          - target_arch: x86
+            target_triple: x86-linux-musl
+          - target_arch: x86_64
+            target_triple: x86_64-linux-musl
     uses: ./.github/workflows/build.yml
     with:
       version: ${{ inputs.version }}
+      target_arch: ${{ matrix.target_arch }}
+      target_triple: ${{ matrix.target_triple }}
+
+  make:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target_arch: armel
+            target_triple: arm-linux-musleabi
+          - target_arch: armhf
+            target_triple: arm-linux-musleabihf
+          - target_arch: aarch64
+            target_triple: aarch64-linux-musl
+          - target_arch: riscv64
+            target_triple: riscv64-linux-musl
+          - target_arch: x86
+            target_triple: x86-linux-musl
+          - target_arch: x86_64
+            target_triple: x86_64-linux-musl
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "build-${{ matrix.target_arch }}"
+        merge-multiple: true
+
+    - name: Delete Artifact
+      uses: geekyeggo/delete-artifact@v5.1.0
+      with:
+        name: "build-${{ matrix.target_arch }}"
+
+    - name: Setup Host Android SDK
+      run: |
+        exit 1
+        mkdir android-sdk
+        cd android-sdk
+        curl -LkSs https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip | unzip -q
+
+  release:
+    name: Release
+    permissions:
+      contents: write
+      actions: write
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+
+    - name: Delete Artifacts
+      uses: geekyeggo/delete-artifact@v5.1.0
+
+    - name: Release
+      uses: ncipollo/release-action@v1.16.0
+      with:
+        tag: "${{inputs.version}}"
+        artifacts: "android-sdk-${{inputs.version}}*"
+        allowUpdates: true
+        replacesArtifacts: true
+        body: ''
+    
