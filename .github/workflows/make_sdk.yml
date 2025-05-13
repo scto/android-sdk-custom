@@ -13,4 +13,4 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      name: ${{ inputs.version }}
+      version: ${{ inputs.version }}
