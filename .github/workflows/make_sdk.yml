@@ -73,6 +73,7 @@ jobs:
 
   release:
     name: Release
+    needs: make
     permissions:
       contents: write
       actions: write
