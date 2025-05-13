@@ -290,24 +290,24 @@ jobs:
               declare -a other_tools=(veridex)
 
               if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-                   for tool in "${build_tools[@]}"; do
-                       if [ -f "$binary_dir/$tool" ]; then
-                           "$STRIP" "$binary_dir/$tool"
-                       fi
-                   done
+                  for tool in "${build_tools[@]}"; do
+                      if [ -f "$binary_dir/$tool" ]; then
+                          "$STRIP" "$binary_dir/$tool"
+                      fi
+                  done
 
-                   for tool in "${platform_tools[@]}"; do
-                       if [ -f "$binary_dir/$tool" ]; then
-                           "$STRIP" "$binary_dir/$tool"
-                       fi
-                   done
+                  for tool in "${platform_tools[@]}"; do
+                      if [ -f "$binary_dir/$tool" ]; then
+                          "$STRIP" "$binary_dir/$tool"
+                      fi
+                  done
 
-                   for tool in "${other_tools[@]}"; do
-                       if [ -f "$binary_dir/$tool" ]; then
-                           "$STRIP" "$binary_dir/$tool"
-                       fi
-                   done
-               fi
+                  for tool in "${other_tools[@]}"; do
+                      if [ -f "$binary_dir/$tool" ]; then
+                          "$STRIP" "$binary_dir/$tool"
+                      fi
+                  done
+              fi
           }
 
           build() {
