@@ -29,7 +29,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics -Wno-attributes")
 
 # platform tools version
 # see the patches/other/platform_tools_version.h
-set(TOOLS_VERSION 35.0.2)
+set(TOOLS_VERSION "35.0.2")
 set(SRC ${PROJECT_SOURCE_DIR}/src)
 
 # 64-bit off_t for lseek.
