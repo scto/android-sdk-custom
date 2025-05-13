@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Build SDK
     strategy:
       fail-fast: false
       matrix:
@@ -35,6 +36,7 @@ jobs:
 
   make:
     needs: build
+    name: Make SDK for ${{ matrix.target_arch }}
     strategy:
       fail-fast: false
       matrix:
