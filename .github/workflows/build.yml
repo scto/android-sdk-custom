@@ -1,8 +1,12 @@
 name: Build
-run-name: Build ${{ matrix.target_arch }}
+run-name: Build for ${{ matrix.target_arch }}
 
 on:
   workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -50,7 +54,7 @@ jobs:
           version: "4.0.2"
 
       - name: Get Sources
-        run: python get_source.py --tags "${{ inputs.tag }}" && find | grep CMakeLists.txt
+        run: python get_source.py --tags "platform-tools-${{ inputs.version }}"
 
       - name: Install Dependencies
         run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential
