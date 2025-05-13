@@ -79,7 +79,7 @@ jobs:
     - name: Make Android SDK
       run: |
         HOST_SDK="${PWD}/android-sdk"
-        BUILT_SDK="${SDK}/build-${{ matrix.target_arch }}"
+        BUILT_SDK="${PWD}/build-${{ matrix.target_arch }}"
 
         find "${HOST_SDK}/build-tools/35.0.1" -type f | while IFS= read -r file; do
             bname="$(basename "${file}")"
