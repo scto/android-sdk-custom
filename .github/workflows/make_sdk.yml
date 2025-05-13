@@ -68,33 +68,41 @@ jobs:
 
     - name: Setup Host Android SDK
       run: |
-        exit 1
         mkdir android-sdk
         cd android-sdk
         curl -LkSs https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip | unzip -q
+        cmdline-tools/bin/sdkmanager --sdk_root=. --licenses | yes
+        cmdline-tools/bin/sdkmanager --sdk_root=. "build-tools;35.0.1" "platform-tools"
 
-  release:
-    name: Release
-    needs: make
-    permissions:
-      contents: write
-      actions: write
-    runs-on: ubuntu-24.04
-    steps:
-    - name: Download Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        merge-multiple: true
+    - name: Make Android SDK
+      run: |
+        HOST_SDK="${PWD}/android-sdk"
+        BUILT_SDK="${SDK}/build-${{ matrix.target_arch }}"
 
-    - name: Delete Artifacts
-      uses: geekyeggo/delete-artifact@v5.1.0
+        find "${HOST_SDK}/build-tools/35.0.1" -type f | while IFS= read -r file; do
+            bname="$(basename "${file}")"
+            if [ -f "${BUILT_SDK}/${bname}" ] && file "${file}" | grep -q 'ELF'; then
+                echo "Replacing ${bname}"
+                cp "${BUILT_SDK}/${bname}" "${file}"
+            fi
+        done
+
+        find "${HOST_SDK}/platform-tools" -type f | while IFS= read -r file; do
+            bname="$(basename "${file}")"
+            if [ -f "${BUILT_SDK}/${bname}" ] && file "${file}" | grep -q 'ELF'; then
+                echo "Replacing ${bname}"
+                cp "${BUILT_SDK}/${bname}" "${file}"
+            fi
+        done
+
+    - name: Archive
+      run: tar -cf - android-sdk | xz -T0 -9e --lzma2=dict=256MiB > android-sdk-${{matrix.target_triple}}.tar.xz
 
     - name: Release
       uses: ncipollo/release-action@v1.16.0
       with:
         tag: "${{inputs.version}}"
-        artifacts: "android-sdk-${{inputs.version}}*"
+        artifacts: "android-sdk-${{matrix.target_triple}}.tar.xz"
         allowUpdates: true
         replacesArtifacts: true
         body: ''
-    
