@@ -65,6 +65,7 @@ jobs:
             export CFLAGS="-fsanitize=undefined"
             export CXXFLAGS="-fsanitize=undefined"
             export LD=${TOOLCHAIN}/bin/ld
+            export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
@@ -87,7 +88,7 @@ jobs:
           cd ..
           curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
           cd CMake-3.31.6
-          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS -static" LDFLAGS="-static"
+          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc)
           sudo make install
           cd ..
           curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.tar.gz | gzip -d | tar -x
