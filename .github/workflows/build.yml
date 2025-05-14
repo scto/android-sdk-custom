@@ -86,7 +86,7 @@ jobs:
           make CC="$CC" AR="$AR" PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
           cd ..
           curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
-          cd CMake-v3.31.6
+          cd CMake-3.31.6
           ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS -static" LDFLAGS="-static"
           sudo make install
           cd ..
