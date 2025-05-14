@@ -50,13 +50,13 @@ jobs:
 
       - name: Build Extra Dependencies
         run: |
-          if ! test -f "${PROTOBUF}"; then
-              patch -up1 <"${{ github.workspace }}/patches/protobuf_CMakeLists.txt.patch"
-              BUILD="${{ github.workspace }}/src/protobuf/build"
-              rm -rf "${BUILD}" && mkdir -p "${BUILD}"
-              cmake -S"${{ github.workspace }}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
-              ninja -C "${BUILD}" -j"$(nproc --all)"
-          fi
+          # if ! test -f "${PROTOBUF}"; then
+              # patch -up1 <"${{ github.workspace }}/patches/protobuf_CMakeLists.txt.patch"
+              # BUILD="${{ github.workspace }}/src/protobuf/build"
+              # rm -rf "${BUILD}" && mkdir -p "${BUILD}"
+              # cmake -S"${{ github.workspace }}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
+              # ninja -C "${BUILD}" -j"$(nproc --all)"
+          # fi
 
           if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
