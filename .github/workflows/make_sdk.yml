@@ -69,29 +69,6 @@ jobs:
       with:
         name: "build-${{ matrix.target_arch }}"
 
-    - name: Set Build Tools Version
-      id: build_tools
-      run: |
-        case "${{ inputs.version }}" in
-            "35.0.2") SETTED_VER="35.0.1" ;;
-            "35.0.1") SETTED_VER="35.0.1" ;;
-            "34.0.5" | "34.0.4" | "34.0.3" | "34.0.1" | "34.0.0") SETTED_VER="34.0.0" ;;
-            "33.0.4" | "33.0.3") SETTED_VER="33.0.3" ;;
-            "33.0.2") SETTED_VER="33.0.2" ;;
-            "33.0.1") SETTED_VER="33.0.1" ;;
-            "33.0.0") SETTED_VER="33.0.0" ;;
-            "32.0.0") SETTED_VER="32.0.0" ;;
-            "31.0.3" | "31.0.2" | "31.0.1" | "31.0.0") SETTED_VER="31.0.0" ;;
-            "30.0.5" | "30.0.4" | "30.0.3") SETTED_VER="30.0.3" ;;
-            "30.0.2") SETTED_VER="30.0.2" ;;
-            "30.0.1") SETTED_VER="30.0.1" ;;
-            "30.0.0") SETTED_VER="30.0.0" ;;
-            "29.0.6" | "29.0.5" | "29.0.4" | "29.0.3") SETTED_VER="29.0.3" ;;
-            "29.0.2") SETTED_VER="29.0.2" ;;
-            "29.0.1") SETTED_VER="29.0.1" ;;
-        esac
-        echo "::set-output name=version::${SETTED_VER}"
-
     - name: Setup Host Android SDK
       run: |
         mkdir android-sdk
@@ -100,14 +77,14 @@ jobs:
         unzip -q commandlinetools.zip
         rm commandlinetools.zip
         yes | cmdline-tools/bin/sdkmanager --sdk_root=. --licenses
-        cmdline-tools/bin/sdkmanager --sdk_root=. "build-tools;${{steps.build_tools.outputs.version}}" "platform-tools"
+        cmdline-tools/bin/sdkmanager --sdk_root=. "build-tools;35.0.1" "platform-tools"
 
     - name: Make Android SDK
       run: |
         HOST_SDK="${PWD}/android-sdk"
         BUILT_SDK="${PWD}/build-${{ matrix.target_arch }}"
 
-        find "${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}" -type f | while IFS= read -r file; do
+        find "${HOST_SDK}/build-tools/35.0.1" -type f | while IFS= read -r file; do
             bname="$(basename "${file}")"
             if [ -f "${BUILT_SDK}/${bname}" ] && file "${file}" | grep -q 'ELF'; then
                 echo "Replacing ${bname}"
@@ -123,15 +100,15 @@ jobs:
             fi
         done
 
-        rm -rf ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/lib64
+        rm -rf ${HOST_SDK}/build-tools/35.0.1/lib64
         rm -rf ${HOST_SDK}/platform-tools/lib64
-        rm -rf ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/*-ld ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/lld* ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/llvm-rs-cc ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/bcc_compat ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/renderscript
+        rm -rf ${HOST_SDK}/build-tools/35.0.1/*-ld ${HOST_SDK}/build-tools/35.0.1/lld* ${HOST_SDK}/build-tools/35.0.1/llvm-rs-cc ${HOST_SDK}/build-tools/35.0.1/bcc_compat ${HOST_SDK}/build-tools/35.0.1/renderscript
         sed -i -e '1s|^#!.*bash|#!/bin/sh|' \
                -e 's/^declare -a javaOpts=()/javaOpts=""/' \
                -e 's/javaOpts+=("-\${opt}")/javaOpts="\$javaOpts -\${opt}"/' \
                -e 's/javaOpts+=("\${defaultMx}")/javaOpts="\$javaOpts \${defaultMx}"/' \
-               -e 's|"\${javaOpts\[@\]}"|$javaOpts|' ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/d8
-        sed -i '1s|^#!.*bash|#!/bin/sh|' ${HOST_SDK}/build-tools/${{steps.build_tools.outputs.version}}/apksigner
+               -e 's|"\${javaOpts\[@\]}"|$javaOpts|' ${HOST_SDK}/build-tools/35.0.1/d8
+        sed -i '1s|^#!.*bash|#!/bin/sh|' ${HOST_SDK}/build-tools/35.0.1/apksigner
 
     - name: Archive
       run: tar -cf - android-sdk | xz -T0 -9e --lzma2=dict=256MiB > android-sdk-${{matrix.target_triple}}.tar.xz
