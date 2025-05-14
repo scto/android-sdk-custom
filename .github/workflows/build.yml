@@ -88,7 +88,9 @@ jobs:
           cd ..
           curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
           cd CMake-3.31.6
-          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc)
+          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) || true
+          cat Bootstrap.cmk/cmake_bootstrap.log
+          exit 1
           sudo make install
           cd ..
           curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.tar.gz | gzip -d | tar -x
