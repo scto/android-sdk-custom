@@ -128,7 +128,7 @@ jobs:
       uses: ncipollo/release-action@v1.16.0
       with:
         tag: "${{inputs.version}}"
-        artifacts: "android-sdk-${{matrix.target_triple}}.tar.xz"
+        artifacts: "android-sdk-*"
         allowUpdates: true
         replacesArtifacts: true
         body: ''
