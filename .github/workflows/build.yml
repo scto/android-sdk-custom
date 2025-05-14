@@ -46,7 +46,7 @@ jobs:
         # run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
 
       - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential
+        run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential qemu-user-static qemu-user-binfmt
 
       - name: Build Extra Dependencies
         run: |
@@ -62,8 +62,6 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined"
-            export CXXFLAGS="-fsanitize=undefined"
             export LD=${TOOLCHAIN}/bin/ld
             export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
@@ -274,8 +272,8 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
-            export CXXFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CFLAGS="-Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CXXFLAGS="-Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
             export LD=${TOOLCHAIN}/bin/ld
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
