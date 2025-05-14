@@ -85,12 +85,12 @@ jobs:
           cd bzip2-1.0.8
           make CC="$CC" AR="$AR" PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
           cd ..
-          curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.zip | unzip -q
+          curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
           cd CMake-v3.31.6
           ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS -static" LDFLAGS="-static"
           sudo make install
           cd ..
-          curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.zip | unzip -q
+          curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.tar.gz | gzip -d | tar -x
           cd ninja-1.12.1
           cmake -G Ninja \
             -DCMAKE_SYSTEM_NAME=Linux \
