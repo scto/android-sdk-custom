@@ -42,8 +42,8 @@ jobs:
         with:
           version: "4.0.2"
 
-      - name: Get Sources
-        run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
+      # - name: Get Sources
+        # run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
 
       - name: Install Dependencies
         run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential
