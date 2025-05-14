@@ -103,14 +103,12 @@ jobs:
         rm -rf ${HOST_SDK}/build-tools/35.0.1/lib64
         rm -rf ${HOST_SDK}/platform-tools/lib64
         rm -rf ${HOST_SDK}/build-tools/35.0.1/*-ld ${HOST_SDK}/build-tools/35.0.1/lld* ${HOST_SDK}/build-tools/35.0.1/llvm-rs-cc ${HOST_SDK}/build-tools/35.0.1/bcc_compat ${HOST_SDK}/build-tools/35.0.1/renderscript
-        sed -e '1s|^#!.*|#!/bin/sh|' \
-            -e '/^declare -a javaOpts=/c\javaOpts=""' \
-            -e '/javaOpts+=("-\$\{opt\}")/c\javaOpts="$javaOpts -$opt"' \
-            -e '/javaOpts+=("\$defaultMx")/c\javaOpts="$javaOpts $defaultMx"' \
-            -e '/exec java "\${javaOpts\[@\]}"/c\eval exec java $javaOpts -cp "$jarpath" "$mainClass" "$@"' ${HOST_SDK}/build-tools/35.0.1/d8
-        sed -e '1s|^#!.*|#!/bin/sh|' \
-            -e 's|\[ -n \([^"]*\)\]|\[ -n "\1" \]|g' \
-            -e 's|if \[ "\$OSTYPE" = "cygwin" \]|if \[ "${OSTYPE:-}" = "cygwin" \]|' ${HOST_SDK}/build-tools/35.0.1/apksigner
+        sed -i -e '1s|^#!.*bash|#!/bin/sh|' \
+               -e 's/^declare -a javaOpts=()/javaOpts=""/' \
+               -e 's/javaOpts+=("-\${opt}")/javaOpts="\$javaOpts -\${opt}"/' \
+               -e 's/javaOpts+=("\${defaultMx}")/javaOpts="\$javaOpts \${defaultMx}"/' \
+               -e 's|"\${javaOpts\[@\]}"|$javaOpts|' ${HOST_SDK}/build-tools/35.0.1/d8
+        sed -i '1s|^#!.*bash|#!/bin/sh|' ${HOST_SDK}/build-tools/35.0.1/apksigner
 
     - name: Archive
       run: tar -cf - android-sdk | xz -T0 -9e --lzma2=dict=256MiB > android-sdk-${{matrix.target_triple}}.tar.xz
