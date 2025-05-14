@@ -88,54 +88,44 @@ jobs:
           cd ..
           curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
           cd CMake-3.31.6
-          sed -i '/bool Find()/,/^}/c\
-          bool Find()\
-          {\
-          #ifdef _WIN32\
-            // reset result members\
-            this->RootKey = cm::string_view{};\
-            this->SubKey = cm::string_view{};\
-            this->ValueName = cm::string_view{};\
-          \
-            auto result = this->RegistryFormat.find(this->Expression);\
-          \
-            if (result) {\
-              auto separator = cm::string_view{\
-                this->Expression.data() + this->RegistryFormat.start(1),\
-                this->RegistryFormat.end(1) - this->RegistryFormat.start(1)\
-              };\
-              if (separator.empty()) {\
-                separator = this->Separator;\
-              } else {\
-                separator = separator.substr(1, separator.length() - 2);\
-              }\
-          \
-              this->RootKey = cm::string_view{\
-                this->Expression.data() + this->RegistryFormat.start(2),\
-                this->RegistryFormat.end(2) - this->RegistryFormat.start(2)\
-              };\
-              this->SubKey = cm::string_view{\
-                this->Expression.data() + this->RegistryFormat.start(3),\
-                this->RegistryFormat.end(3) - this->RegistryFormat.start(3)\
-              };\
-          \
-              auto pos = this->SubKey.find(separator);\
-              if (pos != cm::string_view::npos) {\
-                // split in ValueName and SubKey\
-                this->ValueName = this->SubKey.substr(pos + separator.size());\
-                if (Strucmp(this->ValueName, "(default)") == 0) {\
-                  // handle magic name for default value\
-                  this->ValueName = ""_s;\
-                }\
-                this->SubKey = this->SubKey.substr(0, pos);\
-              } else {\
-                this->ValueName = ""_s;\
-              }\
-            }\
-            return result;\
-          #else\
-            return false;\
-          #endif' Source/cmWindowsRegistry.cxx
+          awk '
+            BEGIN {
+              inside_find = 0;
+              inserted_ifdef = 0;
+              inserted_else = 0;
+            }
+            /^[ ]{2}bool Find\(\)/ {
+              inside_find = 1;
+              print $0;
+              next
+            }
+            inside_find && /^[ ]{2}{/ {
+              print $0;
+              print "#ifdef _WIN32";
+              inserted_ifdef = 1;
+              next
+            }
+            inside_find && /return result;/ {
+              if (inserted_ifdef && !inserted_else) {
+                print $0;
+                print "#else";
+                print "  return false;";
+                print "#endif";
+                inserted_else = 1;
+              } else {
+                print $0;
+              }
+              next
+            }
+            inside_find && /^[ ]{2}}/ {
+              print $0;
+              inside_find = 0;
+              inserted_ifdef = 0;
+              inserted_else = 0;
+              next
+            }
+            { print $0 }
+          ' Source/cmWindowsRegistry.cxx > tmpfile && mv tmpfile Source/cmWindowsRegistry.cxx
           ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) || true
           sudo make install
           cd ..
