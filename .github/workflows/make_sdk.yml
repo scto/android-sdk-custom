@@ -101,6 +101,9 @@ jobs:
             fi
         done
 
+        rm -rf ${HOST_SDK}/build-tools/35.0.1/lib64
+        rm -rf ${HOST_SDK}/platform-tools/lib64
+
     - name: Archive
       run: tar -cf - android-sdk | xz -T0 -9e --lzma2=dict=256MiB > android-sdk-${{matrix.target_triple}}.tar.xz
 
