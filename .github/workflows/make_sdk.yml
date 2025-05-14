@@ -81,7 +81,6 @@ jobs:
 
     - name: Make Android SDK
       run: |
-        find
         HOST_SDK="${PWD}/android-sdk"
         BUILT_SDK="${PWD}/build-${{ matrix.target_arch }}"
 
