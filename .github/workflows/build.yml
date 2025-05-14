@@ -27,7 +27,7 @@ jobs:
         if: contains(inputs.target_triple, 'musl')
         uses: mlugg/setup-zig@v1.2.1
         with:
-          version: 0.14.0
+          version: "0.15.0-dev.137+db7db4802"
           use-cache: false
 
       - name: Setup Zig Toolchain
@@ -62,6 +62,8 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
+            export CFLAGS="-fsanitize=undefined"
+            export CXXFLAGS="-fsanitize=undefined"
             export LD=${TOOLCHAIN}/bin/ld
             export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
@@ -272,8 +274,8 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
-            export CXXFLAGS="-Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+            export CXXFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
             export LD=${TOOLCHAIN}/bin/ld
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
