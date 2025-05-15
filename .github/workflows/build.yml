@@ -62,13 +62,18 @@ jobs:
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined"
-            export CXXFLAGS="-fsanitize=undefined"
+            export CFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
+            export CXXFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
             export LD=${TOOLCHAIN}/bin/ld
             export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
+            echo "#ifndef FAKE_TYPE_H
+            #define FAKE_TYPE_H
+            typedef int pid_t;
+            #endif
+            " > funny.h
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
             export CXX=${{inputs.target_triple}}-c++
@@ -126,13 +131,6 @@ jobs:
             }
             { print $0 }
           ' Source/cmWindowsRegistry.cxx > tmpfile && mv tmpfile Source/cmWindowsRegistry.cxx
-          echo "#ifndef FAKE_TYPE_H
-          #define FAKE_TYPE_H
-          typedef int pid_t;
-          #endif
-          " > funny.h
-          CFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
-          CFLAGS=${CFLAGS}
           ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) || true
           sudo make install
           cd ..
