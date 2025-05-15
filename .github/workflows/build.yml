@@ -27,7 +27,7 @@ jobs:
         if: contains(inputs.target_triple, 'musl')
         uses: mlugg/setup-zig@v1.2.1
         with:
-          version: "0.15.0-dev.137+db7db4802"
+          version: 0.14.0
           use-cache: false
 
       - name: Setup Zig Toolchain
@@ -42,38 +42,32 @@ jobs:
         with:
           version: "4.0.2"
 
-      # - name: Get Sources
-        # run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
+      - name: Get Sources
+        run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
 
       - name: Install Dependencies
-        run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential qemu-user-static
+        run: sudo apt update && sudo apt install -y ninja-build autogen autoconf autoconf-archive m4 libtool build-essential
 
       - name: Build Extra Dependencies
         run: |
-          # if ! test -f "${PROTOBUF}"; then
-              # patch -up1 <"${{ github.workspace }}/patches/protobuf_CMakeLists.txt.patch"
-              # BUILD="${{ github.workspace }}/src/protobuf/build"
-              # rm -rf "${BUILD}" && mkdir -p "${BUILD}"
-              # cmake -S"${{ github.workspace }}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
-              # ninja -C "${BUILD}" -j"$(nproc --all)"
-          # fi
+          if ! test -f "${PROTOBUF}"; then
+              patch -up1 <"${{ github.workspace }}/patches/protobuf_CMakeLists.txt.patch"
+              BUILD="${{ github.workspace }}/src/protobuf/build"
+              rm -rf "${BUILD}" && mkdir -p "${BUILD}"
+              cmake -S"${{ github.workspace }}/src/protobuf" -B"${BUILD}" -GNinja -Dprotobuf_BUILD_TESTS=OFF
+              ninja -C "${BUILD}" -j"$(nproc --all)"
+          fi
 
           if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
-            sed -i 's|^ZIG_EXE=zig$|ZIG_EXE=/opt/hostedtoolcache/zig/0.15.0-dev.137/x64/zig|' ${TOOLCHAIN}/zig_wrapper.sh
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-Wno-implicit-function-declaration -fsanitize=undefined -include ${PWD}/funny.h"
-            export CXXFLAGS="-Wno-implicit-function-declaration -fsanitize=undefined -include ${PWD}/funny.h"
+            export CFLAGS="-fsanitize=undefined"
+            export CXXFLAGS="-fsanitize=undefined"
             export LD=${TOOLCHAIN}/bin/ld
-            export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
-            echo "#ifndef FAKE_TYPE_H
-            #define FAKE_TYPE_H
-            typedef int pid_t;
-            #endif" > funny.h
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
             export CXX=${{inputs.target_triple}}-c++
@@ -91,70 +85,6 @@ jobs:
           cd bzip2-1.0.8
           make CC="$CC" AR="$AR" PREFIX="$(pwd)/../extrabuild" CFLAGS="$CFLAGS -static" LDFLAGS="-static" install
           cd ..
-          curl -LkSs https://github.com/Kitware/CMake/archive/refs/tags/v3.31.6.tar.gz | gzip -d | tar -x
-          cd CMake-3.31.6
-          awk '
-            BEGIN {
-              inside_find = 0;
-              inserted_ifdef = 0;
-              inserted_else = 0;
-            }
-            /^[ ]{2}bool Find\(\)/ {
-              inside_find = 1;
-              print $0;
-              next
-            }
-            inside_find && /^[ ]{2}{/ {
-              print $0;
-              print "#ifdef _WIN32";
-              inserted_ifdef = 1;
-              next
-            }
-            inside_find && /return result;/ {
-              if (inserted_ifdef && !inserted_else) {
-                print $0;
-                print "#else";
-                print "  return false;";
-                print "#endif";
-                inserted_else = 1;
-              } else {
-                print $0;
-              }
-              next
-            }
-            inside_find && /^[ ]{2}}/ {
-              print $0;
-              inside_find = 0;
-              inserted_ifdef = 0;
-              inserted_else = 0;
-              next
-            }
-            { print $0 }
-          ' Source/cmWindowsRegistry.cxx > tmpfile && mv tmpfile Source/cmWindowsRegistry.cxx
-          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc)
-          sudo make install
-          cd ..
-          curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.tar.gz | gzip -d | tar -x
-          cd ninja-1.12.1
-          cmake -G Ninja \
-            -DCMAKE_SYSTEM_NAME=Linux \
-            -DCMAKE_CROSSCOMPILING=True \
-            -DCMAKE_SYSTEM_PROCESSOR=${{ inputs.target_arch }} \
-            -DCMAKE_PREFIX_PATH="$(pwd)/../extrabuild" \
-            -DCMAKE_C_COMPILER="$CC" \
-            -DCMAKE_CXX_COMPILER="$CXX" \
-            -DCMAKE_ASM_COMPILER="$CC" \
-            -DCMAKE_LINKER="$LD" \
-            -DCMAKE_OBJCOPY="$OBJCOPY" \
-            -DCMAKE_AR="$AR" \
-            -DCMAKE_STRIP="$STRIP" \
-            -DCMAKE_C_FLAGS="$CFLAGS" \
-            -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
-            -DCMAKE_BUILD_TYPE=MinSizeRel \
-            -B build
-          cmake --install build
-          find $(pwd)/../extrabuild
-          exit 1
 
       - name: Apply Patches
         run: |
@@ -357,7 +287,7 @@ jobs:
 
               declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
               declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold dmtracedump)
-              declare -a other_tools=(cmake cpack ctest ninja veridex)
+              declare -a other_tools=(veridex)
 
               if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
                   for tool in "${build_tools[@]}"; do
