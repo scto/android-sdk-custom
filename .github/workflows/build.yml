@@ -60,6 +60,7 @@ jobs:
 
           if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
+            export ZIG_EXE="/opt/hostedtoolcache/zig/0.15.0-dev.137/x64/zig"
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
             export CFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
