@@ -63,24 +63,16 @@ jobs:
             sed -i 's|^ZIG_EXE=zig$|ZIG_EXE=/opt/hostedtoolcache/zig/0.15.0-dev.137/x64/zig|' ${TOOLCHAIN}/zig_wrapper.sh
             export CC=${TOOLCHAIN}/bin/cc
             export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
-            export CXXFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
+            export CFLAGS="-Wno-implicit-function-declaration -fsanitize=undefined -include ${PWD}/funny.h"
+            export CXXFLAGS="-Wno-implicit-function-declaration -fsanitize=undefined -include ${PWD}/funny.h"
             export LD=${TOOLCHAIN}/bin/ld
             export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
-            echo "#include <stdint.h>
-            #include <netinet/in.h>
-            #ifndef FAKE_TYPE_H
+            echo "#ifndef FAKE_TYPE_H
             #define FAKE_TYPE_H
-            #ifdef __cplusplus
-            extern "C" {
-            #endif
             typedef int pid_t;
-            #ifdef __cplusplus
-            }
-            #endif
             #endif" > funny.h
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
