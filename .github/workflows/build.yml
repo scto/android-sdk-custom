@@ -70,11 +70,12 @@ jobs:
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
-            echo "#ifndef FAKE_TYPE_H
+            echo "#include <stdint.h>
+            #ifndef FAKE_TYPE_H
             #define FAKE_TYPE_H
             typedef int pid_t;
-            #endif
-            " > funny.h
+            uint32_t htonl(uint32_t);
+            #endif" > funny.h
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
             export CXX=${{inputs.target_triple}}-c++
@@ -132,7 +133,7 @@ jobs:
             }
             { print $0 }
           ' Source/cmWindowsRegistry.cxx > tmpfile && mv tmpfile Source/cmWindowsRegistry.cxx
-          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc) || true
+          ./bootstrap --prefix="$(pwd)/../extrabuild" --parallel=$(nproc)
           sudo make install
           cd ..
           curl -LkSs https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.tar.gz | gzip -d | tar -x
