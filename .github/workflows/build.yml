@@ -71,10 +71,16 @@ jobs:
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
             echo "#include <stdint.h>
+            #include <netinet/in.h>
             #ifndef FAKE_TYPE_H
             #define FAKE_TYPE_H
+            #ifdef __cplusplus
+            extern "C" {
+            #endif
             typedef int pid_t;
-            uint32_t htonl(uint32_t);
+            #ifdef __cplusplus
+            }
+            #endif
             #endif" > funny.h
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
