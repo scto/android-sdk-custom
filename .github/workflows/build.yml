@@ -61,11 +61,11 @@ jobs:
           if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
             TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
             export ZIG_EXE="/opt/hostedtoolcache/zig/0.15.0-dev.137/x64/zig"
-            export CC=${TOOLCHAIN}/bin/cc
-            export CXX=${TOOLCHAIN}/bin/c++
+            export CC="$ZIG_EXE cc -target $ZIG_TARGET"
+            export CXX="$ZIG_EXE c++ -target $ZIG_TARGET"
             export CFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
             export CXXFLAGS="-fsanitize=undefined -include ${PWD}/funny.h"
-            export LD=${TOOLCHAIN}/bin/ld
+            export LD="$ZIG_EXE ld.lld"
             export LDFLAGS="-static"
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
@@ -358,7 +358,7 @@ jobs:
 
               declare -a build_tools=(aapt aapt2 aidl zipalign dexdump split-select)
               declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold dmtracedump)
-              declare -a other_tools=(veridex)
+              declare -a other_tools=(cmake cpack ctest ninja veridex)
 
               if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
                   for tool in "${build_tools[@]}"; do
