@@ -60,6 +60,10 @@ def patches():
     shutil.copy2(Path("patches/misc/deployagentscript.inc"), Path("src/adb/fastdeploy/deployagent"))
 
     shutil.copy2(Path("patches/misc/platform_tools_version.h"), Path("src/soong/cc/libbuildversion/include"))
+
+    shutil.copy2(Path("patches/misc/arch/instruction_set.h"), Path("src/art/libartbase/arch/instruction_set.h"))
+    shutil.copy2(Path("patches/misc/arch/instruction_set.cc"), Path("src/art/libartbase/arch/instruction_set.cc"))
+    shutil.copy2(Path("patches/misc/arch/instruction_set_test.cc"), Path("src/art/libartbase/arch/instruction_set_test.cc"))
     
     pattern = "\'s#frameworks/base/tools/aapt2/Configuration.proto#Configuration.proto#g\'"
     pattern2 = "\'s#frameworks/base/tools/aapt2/Resources.proto#Resources.proto#g\'"
