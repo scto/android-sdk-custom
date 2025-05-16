@@ -362,7 +362,7 @@ static inline constexpr TwoWordReturn GetTwoWordSuccessValue(uintptr_t hi, uintp
   return ((hi64 << 32) | lo32);
 }
 
-#elif defined(__x86_64__) || defined(__aarch64__) || defined(__riscv)
+#elif defined(__x86_64__) || defined(__aarch64__) || defined(__riscv) || defined(__loongarch__)
 
 // Note: TwoWordReturn can't be constexpr for 64-bit targets. We'd need a constexpr constructor,
 //       which would violate C-linkage in the entrypoint functions.
