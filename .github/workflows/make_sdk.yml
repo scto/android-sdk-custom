@@ -20,8 +20,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - target_arch: armel
+            target_triple: arm-linux-musleabi
+          - target_arch: armhf
+            target_triple: arm-linux-musleabihf
+          - target_arch: aarch64
+            target_triple: aarch64-linux-musl
           - target_arch: riscv32
             target_triple: riscv32-linux-musl
+          - target_arch: riscv64
+            target_triple: riscv64-linux-musl
+          - target_arch: x86
+            target_triple: x86-linux-musl
+          - target_arch: x86_64
+            target_triple: x86_64-linux-musl
           - target_arch: loongarch64
             target_triple: loongarch64-linux-musl
     uses: ./.github/workflows/build.yml
