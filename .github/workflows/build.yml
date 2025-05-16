@@ -146,6 +146,9 @@ jobs:
           #endif
           ' ${PWD}/src/core/libcutils/trace-dev.inc
 
+          sed -i '/#elif defined(OPENSSL_RISCV64)/a \#elif defined(OPENSSL_LOONG64)\n\#define EXPECTED_NR_getrandom 278' ${PWD}/src/boringssl/src/crypto/fipsmodule/rand/getrandom_fillin.h
+          sed -i '/#elif defined(__MIPSEL__) && !defined(__LP64__)/i \#elif defined(__loongarch64)\n\#define OPENSSL_64_BIT\n\#define OPENSSL_LOONG64' ${PWD}/src/boringssl/src/include/openssl/target.h
+
           sed -i '/^namespace art {/i\
           \// see aosp/art/build/art.go\
           \// We need larger stack overflow guards for ASAN, as the compiled code will hav\
