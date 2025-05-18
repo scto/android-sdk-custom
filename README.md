@@ -15,8 +15,9 @@ A custom-built Android SDK that replaces the default binaries with versions buil
     - Android
   - **Supported Architectures**:
     - **x86**: `x86`, `x86_64`
-    - **ARM**: `arm`, `armhf`, `aarch64`
+    - **ARM**: `arm`, `armeb`, `aarch64`, `aarch64_be`
     - **RISC-V**: `riscv32`, `riscv64`
+    - **Other**: `loongarch64`, `powerpc64le`, `s390x`
 
 ## Usage
 

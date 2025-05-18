@@ -24,23 +24,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Zig
-        if: contains(inputs.target_triple, 'musl')
         uses: mlugg/setup-zig@v1.2.1
         with:
           version: 0.14.0
           use-cache: false
 
       - name: Setup Zig Toolchain
-        if: contains(inputs.target_triple, 'musl')
         run: |
           cd ${{ github.workspace }}
           git clone https://github.com/HomuHomu833/zig-as-llvm
-
-      - name: Setup Cosmo Toolchain
-        if: contains(inputs.target_triple, 'cosmo')
-        uses: bjia56/setup-cosmocc@v0.0.3
-        with:
-          version: "4.0.2"
 
       - name: Get Sources
         run: sed -i 's/"35\.0\.2"/"${{ inputs.version }}"/g' ${PWD}/CMakeLists.txt ${PWD}/patches/misc/platform_tools_version.h && python get_source.py --tags "platform-tools-${{ inputs.version }}"
@@ -58,24 +50,16 @@ jobs:
               ninja -C "${BUILD}" -j"$(nproc --all)"
           fi
 
-          if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-            TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
-            export CC=${TOOLCHAIN}/bin/cc
-            export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined"
-            export CXXFLAGS="-fsanitize=undefined"
-            export LD=${TOOLCHAIN}/bin/ld
-            export OBJCOPY=${TOOLCHAIN}/bin/objcopy
-            export AR=${TOOLCHAIN}/bin/ar
-            export STRIP=${TOOLCHAIN}/bin/strip
-          elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
-            export CC=${{inputs.target_triple}}-cc
-            export CXX=${{inputs.target_triple}}-c++
-            export LD=${{inputs.target_triple}}-ld
-            export OBJCOPY=${{inputs.target_triple}}-objcopy
-            export AR=${{inputs.target_triple}}-ar
-            export STRIP="echo $@"
-          fi
+          TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
+          export CC=${TOOLCHAIN}/bin/cc
+          export CXX=${TOOLCHAIN}/bin/c++
+          export CFLAGS="-fsanitize=undefined"
+          export CXXFLAGS="-fsanitize=undefined"
+          export LD=${TOOLCHAIN}/bin/ld
+          export OBJCOPY=${TOOLCHAIN}/bin/objcopy
+          export AR=${TOOLCHAIN}/bin/ar
+          export STRIP=${TOOLCHAIN}/bin/strip
+
           curl -LkSs https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz | xz -d | tar -x
           cd zlib-1.3.1
           ./configure --prefix="$(pwd)/../extrabuild" --static
@@ -145,9 +129,6 @@ jobs:
           #define PROP_NAME_MAX 32\
           #endif
           ' ${PWD}/src/core/libcutils/trace-dev.inc
-
-          sed -i '/#elif defined(OPENSSL_RISCV64)/a \#elif defined(OPENSSL_LOONG64)\n\#define EXPECTED_NR_getrandom 278' ${PWD}/src/boringssl/src/crypto/fipsmodule/rand/getrandom_fillin.h
-          sed -i '/#elif defined(__MIPSEL__) && !defined(__LP64__)/i \#elif defined(__loongarch64)\n\#define OPENSSL_64_BIT\n\#define OPENSSL_LOONG64' ${PWD}/src/boringssl/src/include/openssl/target.h
 
           # fml
           if [[ "${{ inputs.target_triple }}" == "riscv32-linux-musl" ]]; then
@@ -243,35 +224,18 @@ jobs:
           ' ${PWD}/src/art/libdexfile/dex/dex_file.cc
           sed -i 's/ \/\/__INSERT_HERE__//' ${PWD}/src/art/libdexfile/dex/dex_file.cc
 
-          # fml 3
-          if [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
-            sed -i '/if(NOT CMAKE_SYSTEM_NAME STREQUAL "Android")/,/endif()/ s/^/#/' ${PWD}/src/boringssl/CMakeLists.txt
-            sed -i 's/^\s*find_package(Threads REQUIRED)/# &/' ${PWD}/src/zstd/build/cmake/CMakeLists.txt ${PWD}/src/abseil-cpp/CMakeLists.txt ${PWD}/src/protobuf/CMakeLists.txt
-          fi
-
       - name: Build Android SDK
         shell: bash
         run: |
-          if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-            TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
-            export CC=${TOOLCHAIN}/bin/cc
-            export CXX=${TOOLCHAIN}/bin/c++
-            export CFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
-            export CXXFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
-            export LD=${TOOLCHAIN}/bin/ld
-            export OBJCOPY=${TOOLCHAIN}/bin/objcopy
-            export AR=${TOOLCHAIN}/bin/ar
-            export STRIP=${TOOLCHAIN}/bin/strip
-          elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
-            export CC=${{inputs.target_triple}}-cc
-            export CXX=${{inputs.target_triple}}-c++
-            export CFLAGS="-static"
-            export CXXFLAGS="-static"
-            export LD=${{inputs.target_triple}}-ld
-            export OBJCOPY=${{inputs.target_triple}}-objcopy
-            export AR=${{inputs.target_triple}}-ar
-            export STRIP="echo $@"
-          fi
+          TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
+          export CC=${TOOLCHAIN}/bin/cc
+          export CXX=${TOOLCHAIN}/bin/c++
+          export CFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+          export CXXFLAGS="-fsanitize=undefined -Wno-error=date-time -Doff64_t=off_t -Dmmap64=mmap -Dlseek64=lseek -Dpread64=pread -Dpwrite64=pwrite -Dftruncate64=ftruncate -DANDROID_HOST_MUSL -static"
+          export LD=${TOOLCHAIN}/bin/ld
+          export OBJCOPY=${TOOLCHAIN}/bin/objcopy
+          export AR=${TOOLCHAIN}/bin/ar
+          export STRIP=${TOOLCHAIN}/bin/strip
 
           format_time() {
               local T=$1
@@ -300,25 +264,23 @@ jobs:
               declare -a platform_tools=(adb fastboot sqlite3 etc1tool hprof-conv e2fsdroid sload_f2fs mke2fs make_f2fs make_f2fs_casefold dmtracedump)
               declare -a other_tools=(veridex)
 
-              if [[ "${{ inputs.target_triple }}" == *"musl"* ]]; then
-                  for tool in "${build_tools[@]}"; do
-                      if [ -f "$binary_dir/$tool" ]; then
-                          "$STRIP" "$binary_dir/$tool"
-                      fi
-                  done
+              for tool in "${build_tools[@]}"; do
+                  if [ -f "$binary_dir/$tool" ]; then
+                      "$STRIP" "$binary_dir/$tool"
+                  fi
+               done
 
-                  for tool in "${platform_tools[@]}"; do
-                      if [ -f "$binary_dir/$tool" ]; then
-                          "$STRIP" "$binary_dir/$tool"
-                      fi
-                  done
+              for tool in "${platform_tools[@]}"; do
+                  if [ -f "$binary_dir/$tool" ]; then
+                      "$STRIP" "$binary_dir/$tool"
+                  fi
+              done
 
-                  for tool in "${other_tools[@]}"; do
-                      if [ -f "$binary_dir/$tool" ]; then
-                          "$STRIP" "$binary_dir/$tool"
-                      fi
-                  done
-              fi
+              for tool in "${other_tools[@]}"; do
+                  if [ -f "$binary_dir/$tool" ]; then
+                      "$STRIP" "$binary_dir/$tool"
+                  fi
+              done
           }
 
           build() {
@@ -375,5 +337,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ inputs.target_arch }}
+          name: build-${{ inputs.target_triple }}
           path: ~/sdk/*
