@@ -99,7 +99,43 @@ double UnscaledCycleClock::Frequency() {
   });
   return timebase_frequency;
 #else
-#error Must implement UnscaledCycleClock::Frequency()
+  // unknown libc PPC fallback
+  static double frequency = 0.0;
+  static std::once_flag once;
+
+  std::call_once(once, []() {
+    // try SPR 0x15C (not guaranteed to exist)
+#if defined(__powerpc64__)
+    uint64_t freq_spr = 0;
+    asm volatile("mfspr %0, 0x15c" : "=r"(freq_spr));
+    frequency = static_cast<double>(freq_spr);
+#else
+    uint32_t freq_spr = 0;
+    asm volatile("mfspr %0, 0x15c" : "=r"(freq_spr));
+    frequency = static_cast<double>(freq_spr);
+#endif
+
+    // fallback to parsing /proc/cpuinfo
+    if (frequency == 0.0) {
+      std::ifstream cpuinfo("/proc/cpuinfo");
+      std::string line;
+      while (std::getline(cpuinfo, line)) {
+        if (line.find("timebase") != std::string::npos) {
+          size_t colon = line.find(':');
+          if (colon != std::string::npos) {
+            try {
+              frequency = std::stod(line.substr(colon + 1));
+              break;
+            } catch (...) {
+              frequency = 0.0;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return frequency;
 #endif
 }
 
