@@ -32,7 +32,7 @@ jobs:
             target_triple: aarch64-linux-musl
           - target_arch: aarch64
             target_triple: aarch64_be-linux-musl
-          - target_arch: loongarch64
+          - target_arch: loong64
             target_triple: loongarch64-linux-musl
           - target_arch: riscv32
             target_triple: riscv32-linux-musl
@@ -78,12 +78,12 @@ jobs:
     - name: Download Artifact
       uses: actions/download-artifact@v4
       with:
-        name: "build-${{ matrix.target_arch }}"
+        name: "build-${{ matrix.target_triple }}"
 
     - name: Delete Artifact
       uses: geekyeggo/delete-artifact@v5.1.0
       with:
-        name: "build-${{ matrix.target_arch }}"
+        name: "build-${{ matrix.target_triple }}"
 
     - name: Setup Host Android SDK
       run: |
@@ -98,7 +98,7 @@ jobs:
     - name: Make Android SDK
       run: |
         HOST_SDK="${PWD}/android-sdk"
-        BUILT_SDK="${PWD}/build-${{ matrix.target_arch }}"
+        BUILT_SDK="${PWD}/build-${{ matrix.target_triple }}"
 
         find "${HOST_SDK}/build-tools/35.0.1" -type f | while IFS= read -r file; do
             bname="$(basename "${file}")"
@@ -132,7 +132,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: android-sdk-${{matrix.target_arch}}
+        name: android-sdk-${{matrix.target_triple}}
         path: android-sdk-${{matrix.target_triple}}.tar.xz
 
   release:
