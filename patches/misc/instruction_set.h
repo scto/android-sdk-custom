@@ -37,7 +37,7 @@ enum class InstructionSet {
   kLoongArch64,
   kPowerPC,
   kS390X,
-  kLast = kS390x
+  kLast = kS390X
 };
 std::ostream& operator<<(std::ostream& os, InstructionSet rhs);
 
