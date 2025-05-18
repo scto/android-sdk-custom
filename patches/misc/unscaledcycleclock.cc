@@ -14,6 +14,13 @@
 
 #include "absl/base/internal/unscaledcycleclock.h"
 
+#if defined(__powerpc__) || defined(__ppc__)
+#include <mutex>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#endif
+
 #if ABSL_USE_UNSCALED_CYCLECLOCK
 
 #if defined(_WIN32)
