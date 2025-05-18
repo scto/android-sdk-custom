@@ -257,6 +257,10 @@ jobs:
             export OBJCOPY=${TOOLCHAIN}/bin/objcopy
             export AR=${TOOLCHAIN}/bin/ar
             export STRIP=${TOOLCHAIN}/bin/strip
+            if [[ "${{ inputs.target_triple }}" == *mips* ]]; then
+              export CFLAGS="$CFLAGS -mllvm -mips-tail-calls=1"
+              export CXXFLAGS="$CXXFLAGS -mllvm -mips-tail-calls=1"
+            fi
           elif [[ "${{ inputs.target_triple }}" == *"cosmo"* ]]; then
             export CC=${{inputs.target_triple}}-cc
             export CXX=${{inputs.target_triple}}-c++
