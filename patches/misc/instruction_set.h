@@ -35,7 +35,9 @@ enum class InstructionSet {
   kX86,
   kX86_64,
   kLoongArch64,
-  kLast = kLoongArch64
+  kPowerPC,
+  kS390X,
+  kLast = kS390x
 };
 std::ostream& operator<<(std::ostream& os, InstructionSet rhs);
 
@@ -51,6 +53,10 @@ static constexpr InstructionSet kRuntimeISA = InstructionSet::kX86;
 static constexpr InstructionSet kRuntimeISA = InstructionSet::kX86_64;
 #elif defined(__loongarch__)
 static constexpr InstructionSet kRuntimeISA = InstructionSet::kLoongArch64;
+#elif defined(__powerpc__)
+static constexpr InstructionSet kRuntimeISA = InstructionSet::kPowerPC;
+#elif defined(__s390x__)
+static constexpr InstructionSet kRuntimeISA = InstructionSet::kS390X;
 #else
 static constexpr InstructionSet kRuntimeISA = InstructionSet::kNone;
 #endif
@@ -62,6 +68,8 @@ static constexpr PointerSize kRiscv64PointerSize = PointerSize::k64;
 static constexpr PointerSize kX86PointerSize = PointerSize::k32;
 static constexpr PointerSize kX86_64PointerSize = PointerSize::k64;
 static constexpr PointerSize kLoongArch64PointerSize = PointerSize::k64;
+static constexpr PointerSize kPowerPCPointerSize = PointerSize::k64;
+static constexpr PointerSize kS390XPointerSize = PointerSize::k64;
 
 // ARM64 default SVE vector length.
 static constexpr size_t kArm64DefaultSVEVectorLength = 256;
@@ -74,6 +82,8 @@ static constexpr size_t kArm64CodeAlignment = 16;
 static constexpr size_t kRiscv64CodeAlignment = 16;
 static constexpr size_t kX86CodeAlignment = 16;
 static constexpr size_t kLoongArch64CodeAlignment = 16;
+static constexpr size_t kPowerPCCodeAlignment = 16;
+static constexpr size_t kS390XCodeAlignment = 16;
 
 // Instruction alignment (every instruction must be aligned at this boundary). This differs from
 // code alignment, which applies only to the first instruction of a subroutine.
@@ -86,6 +96,8 @@ static constexpr size_t kRiscv64InstructionAlignment = 2;
 static constexpr size_t kX86InstructionAlignment = 1;
 static constexpr size_t kX86_64InstructionAlignment = 1;
 static constexpr size_t kLoongArch64InstructionAlignment = 4;
+static constexpr size_t kPowerPCInstructionAlignment = 4;
+static constexpr size_t kS390XInstructionAlignment = 2;
 
 const char* GetInstructionSetString(InstructionSet isa);
 
@@ -111,6 +123,10 @@ constexpr PointerSize GetInstructionSetPointerSize(InstructionSet isa) {
       return kX86_64PointerSize;
     case InstructionSet::kLoongArch64:
       return kLoongArch64PointerSize;
+    case InstructionSet::kPowerPC:
+      return kPowerPCPointerSize;
+    case InstructionSet::kS390X:
+      return kS390XPointerSize;
 
     case InstructionSet::kNone:
       break;
@@ -127,6 +143,8 @@ constexpr bool IsValidInstructionSet(InstructionSet isa) {
     case InstructionSet::kX86:
     case InstructionSet::kX86_64:
     case InstructionSet::kLoongArch64:
+    case InstructionSet::kPowerPC:
+    case InstructionSet::kS390X:
       return true;
 
     case InstructionSet::kNone:
@@ -151,6 +169,10 @@ constexpr size_t GetInstructionSetInstructionAlignment(InstructionSet isa) {
       return kX86_64InstructionAlignment;
     case InstructionSet::kLoongArch64:
       return kLoongArch64InstructionAlignment;
+    case InstructionSet::kPowerPC:
+      return kPowerPCInstructionAlignment;
+    case InstructionSet::kS390X:
+      return kS390XInstructionAlignment;
 
     case InstructionSet::kNone:
       break;
@@ -174,6 +196,10 @@ constexpr size_t GetInstructionSetCodeAlignment(InstructionSet isa) {
       return kX86CodeAlignment;
     case InstructionSet::kLoongArch64:
       return kLoongArch64CodeAlignment;
+    case InstructionSet::kPowerPC:
+      return kPowerPCCodeAlignment;
+    case InstructionSet::kS390X:
+      return kS390XCodeAlignment;
 
     case InstructionSet::kNone:
       break;
@@ -191,6 +217,8 @@ constexpr size_t GetInstructionSetEntryPointAdjustment(InstructionSet isa) {
     case InstructionSet::kX86:
     case InstructionSet::kX86_64:
     case InstructionSet::kLoongArch64:
+    case InstructionSet::kPowerPC:
+    case InstructionSet::kS390X:
       return 0;
     case InstructionSet::kThumb2: {
       // +1 to set the low-order bit so a BLX will switch to Thumb mode
@@ -214,6 +242,8 @@ constexpr bool Is64BitInstructionSet(InstructionSet isa) {
     case InstructionSet::kRiscv64:
     case InstructionSet::kX86_64:
     case InstructionSet::kLoongArch64:
+    case InstructionSet::kPowerPC:
+    case InstructionSet::kS390X:
       return true;
 
     case InstructionSet::kNone:
@@ -242,6 +272,10 @@ constexpr size_t GetBytesPerGprSpillLocation(InstructionSet isa) {
       return 8;
     case InstructionSet::kLoongArch64:
       return 8;
+    case InstructionSet::kPowerPC:
+      return 8;
+    case InstructionSet::kS390X:
+      return 8;
 
     case InstructionSet::kNone:
       break;
@@ -265,6 +299,10 @@ constexpr size_t GetBytesPerFprSpillLocation(InstructionSet isa) {
       return 8;
     case InstructionSet::kLoongArch64:
       return 8;
+    case InstructionSet::kPowerPC:
+      return 8;
+    case InstructionSet::kS390X:
+      return 8;
 
     case InstructionSet::kNone:
       break;
@@ -279,7 +317,8 @@ namespace instruction_set_details {
 
 #if !defined(ART_STACK_OVERFLOW_GAP_arm) || !defined(ART_STACK_OVERFLOW_GAP_arm64) || \
     !defined(ART_STACK_OVERFLOW_GAP_riscv64) || !defined(ART_STACK_OVERFLOW_GAP_loongarch64) || \
-    !defined(ART_STACK_OVERFLOW_GAP_x86) || !defined(ART_STACK_OVERFLOW_GAP_x86_64)
+    !defined(ART_STACK_OVERFLOW_GAP_x86) || !defined(ART_STACK_OVERFLOW_GAP_x86_64) || \
+    !defined(ART_STACK_OVERFLOW_GAP_powerpc) || !defined(ART_STACK_OVERFLOW_GAP_s390x)
 #error "Missing defines for stack overflow gap"
 #endif
 
@@ -289,6 +328,8 @@ static constexpr size_t kRiscv64StackOverflowReservedBytes = ART_STACK_OVERFLOW_
 static constexpr size_t kX86StackOverflowReservedBytes     = ART_STACK_OVERFLOW_GAP_x86;
 static constexpr size_t kX86_64StackOverflowReservedBytes  = ART_STACK_OVERFLOW_GAP_x86_64;
 static constexpr size_t kLoongArch64StackOverflowReservedBytes = ART_STACK_OVERFLOW_GAP_loongarch64;
+static constexpr size_t kPowerPCStackOverflowReservedBytes = ART_STACK_OVERFLOW_GAP_powerpc;
+static constexpr size_t kS390XStackOverflowReservedBytes = ART_STACK_OVERFLOW_GAP_s390x;
 
 NO_RETURN void GetStackOverflowReservedBytesFailure(const char* error_msg);
 
@@ -315,6 +356,12 @@ constexpr size_t GetStackOverflowReservedBytes(InstructionSet isa) {
 
     case InstructionSet::kLoongArch64:
       return instruction_set_details::kLoongArch64StackOverflowReservedBytes;
+
+    case InstructionSet::kPowerPC:
+      return instruction_set_details::kPowerPCStackOverflowReservedBytes;
+
+    case InstructionSet::kS390X:
+      return instruction_set_details::kS390XStackOverflowReservedBytes;
 
     case InstructionSet::kNone:
       instruction_set_details::GetStackOverflowReservedBytesFailure(
@@ -362,7 +409,7 @@ static inline constexpr TwoWordReturn GetTwoWordSuccessValue(uintptr_t hi, uintp
   return ((hi64 << 32) | lo32);
 }
 
-#elif defined(__x86_64__) || defined(__aarch64__) || defined(__riscv) || defined(__loongarch__)
+#elif defined(__x86_64__) || defined(__aarch64__) || defined(__riscv) || defined(__loongarch__) || defined(__powerpc__) || defined(__s390x__)
 
 // Note: TwoWordReturn can't be constexpr for 64-bit targets. We'd need a constexpr constructor,
 //       which would violate C-linkage in the entrypoint functions.
