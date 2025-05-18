@@ -34,10 +34,10 @@
 #elif defined(__ARMEL__) || defined(__ARMEB__) || defined(_M_ARM)
 #define OPENSSL_32_BIT
 #define OPENSSL_ARM
-#elif defined(__MIPSEL__) && !defined(__LP64__)
+#elif defined(__MIPSEL__) || defined(__MIPSEB__) && !defined(__LP64__)
 #define OPENSSL_32_BIT
 #define OPENSSL_MIPS
-#elif defined(__MIPSEL__) && defined(__LP64__)
+#elif defined(__MIPSEL__) || defined(__MIPSEB__) && defined(__LP64__)
 #define OPENSSL_64_BIT
 #define OPENSSL_MIPS64
 #elif defined(__loongarch64)
