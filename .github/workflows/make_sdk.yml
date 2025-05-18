@@ -32,7 +32,7 @@ jobs:
             target_triple: aarch64-linux-musl
           - target_arch: aarch64_be
             target_triple: aarch64_be-linux-musl
-          - target_arch: loong64
+          - target_arch: loongarch64
             target_triple: loongarch64-linux-musl
           - target_arch: mips
             target_triple: mips-linux-musleabihf
@@ -83,7 +83,7 @@ jobs:
             target_triple: aarch64-linux-musl
           - target_arch: aarch64_be
             target_triple: aarch64_be-linux-musl
-          - target_arch: loong64
+          - target_arch: loongarch64
             target_triple: loongarch64-linux-musl
           - target_arch: mips
             target_triple: mips-linux-musleabihf
