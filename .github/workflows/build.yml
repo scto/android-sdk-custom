@@ -167,6 +167,8 @@ jobs:
           #define ART_STACK_OVERFLOW_GAP_x86 16384\
           #define ART_STACK_OVERFLOW_GAP_x86_64 20480\
           #define ART_STACK_OVERFLOW_GAP_loongarch64 16384\
+          #define ART_STACK_OVERFLOW_GAP_powerpc 16384\
+          #define ART_STACK_OVERFLOW_GAP_s390x 16384\
           \
           \// see aosp/art/build/art.go\
           \// default frame size limit: 1736\

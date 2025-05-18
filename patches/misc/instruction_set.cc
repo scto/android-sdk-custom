@@ -33,6 +33,8 @@ void InstructionSetAbort(InstructionSet isa) {
     case InstructionSet::kX86:
     case InstructionSet::kX86_64:
     case InstructionSet::kLoongArch64:
+    case InstructionSet::kPowerPC:
+    case InstructionSet::kS390X:
     case InstructionSet::kNone:
       LOG(FATAL) << "Unsupported instruction set " << isa;
       UNREACHABLE();
@@ -56,6 +58,10 @@ const char* GetInstructionSetString(InstructionSet isa) {
       return "x86_64";
     case InstructionSet::kLoongArch64:
       return "loong64";
+    case InstructionSet::kPowerPC:
+      return "ppc64le";
+    case InstructionSet::kS390X:
+      return "s390x";
     case InstructionSet::kNone:
       return "none";
   }
@@ -78,6 +84,10 @@ InstructionSet GetInstructionSetFromString(const char* isa_str) {
     return InstructionSet::kX86_64;
   } else if (strcmp("loong64", isa_str) == 0) {
     return InstructionSet::kLoongArch64;
+  } else if (strcmp("ppc64le", isa_str) == 0) {
+    return InstructionSet::kPowerPC;
+  } else if (strcmp("s390x", isa_str) == 0) {
+    return InstructionSet::kS390X;
   }
 
   return InstructionSet::kNone;
@@ -119,6 +129,10 @@ std::vector<InstructionSet> GetSupportedInstructionSets(std::string* error_msg) 
       }
     case InstructionSet::kLoongArch64:
       return {InstructionSet::kLoongArch64};
+    case InstructionSet::kPowerPC:
+      return {InstructionSet::kPowerPC};
+    case InstructionSet::kS390X:
+      return {InstructionSet::kS390X};
     default:
       *error_msg = android::base::StringPrintf("Unknown runtime ISA '%s'",
                                                GetInstructionSetString(kRuntimeISA));
@@ -143,6 +157,10 @@ static_assert(ART_FRAME_SIZE_LIMIT < kX86StackOverflowReservedBytes,
 static_assert(ART_FRAME_SIZE_LIMIT < kX86_64StackOverflowReservedBytes,
               "Frame size limit too large");
 static_assert(ART_FRAME_SIZE_LIMIT < kLoongArch64StackOverflowReservedBytes,
+              "Frame size limit too large");
+static_assert(ART_FRAME_SIZE_LIMIT < kPowerPCStackOverflowReservedBytes,
+              "Frame size limit too large");
+static_assert(ART_FRAME_SIZE_LIMIT < kS390XStackOverflowReservedBytes,
               "Frame size limit too large");
 
 NO_RETURN void GetStackOverflowReservedBytesFailure(const char* error_msg) {
