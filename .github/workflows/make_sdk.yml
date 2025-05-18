@@ -34,10 +34,6 @@ jobs:
             target_triple: aarch64_be-linux-musl
           - target_arch: loongarch64
             target_triple: loongarch64-linux-musl
-          - target_arch: powerpc
-            target_triple: powerpc-linux-musleabihf
-          - target_arch: powerpc64
-            target_triple: powerpc64-linux-musl
           - target_arch: powerpc64le
             target_triple: powerpc64le-linux-musl
           - target_arch: riscv32
@@ -77,10 +73,6 @@ jobs:
             target_triple: aarch64_be-linux-musl
           - target_arch: loongarch64
             target_triple: loongarch64-linux-musl
-          - target_arch: powerpc
-            target_triple: powerpc-linux-musleabihf
-          - target_arch: powerpc64
-            target_triple: powerpc64-linux-musl
           - target_arch: powerpc64le
             target_triple: powerpc64le-linux-musl
           - target_arch: riscv32
