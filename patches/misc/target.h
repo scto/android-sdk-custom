@@ -51,6 +51,12 @@
 #elif defined(__s390x__)
 #define OPENSSL_64_BIT
 #define OPENSSL_S390X
+#elif defined(__powerpc64__)
+#define OPENSSL_64_BIT
+#define OPENSSL_PPC
+#elif defined(__powerpc__) && !defined(__powerpc64__)
+#define OPENSSL_32_BIT
+#define OPENSSL_PPC
 #elif defined(__pnacl__)
 #define OPENSSL_32_BIT
 #define OPENSSL_PNACL
