@@ -68,6 +68,8 @@ def patches():
 
     shutil.copy2(Path("patches/misc/target.h"), Path("src/boringssl/src/include/openssl/target.h"));
     shutil.copy2(Path("patches/misc/getrandom_fillin.h"), Path("src/boringssl/src/crypto/fipsmodule/rand/getrandom_fillin.h"));
+
+    shutil.copy2(Path("patches/misc/unscaledcycleclock.cc"), Path("src/abseil-cpp/absl/base/internal/unscaledcycleclock.cc"));
     
     pattern = "\'s#frameworks/base/tools/aapt2/Configuration.proto#Configuration.proto#g\'"
     pattern2 = "\'s#frameworks/base/tools/aapt2/Resources.proto#Resources.proto#g\'"
