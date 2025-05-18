@@ -30,10 +30,24 @@ jobs:
             target_triple: armeb-linux-musleabihf
           - target_arch: aarch64
             target_triple: aarch64-linux-musl
-          - target_arch: aarch64
+          - target_arch: aarch64_be
             target_triple: aarch64_be-linux-musl
           - target_arch: loong64
             target_triple: loongarch64-linux-musl
+          - target_arch: mips
+            target_triple: mips-linux-musleabihf
+          - target_arch: mips64
+            target_triple: mips64-linux-muslabin32
+          - target_arch: mipsel
+            target_triple: mipsel-linux-musleabihf
+          - target_arch: mips64el
+            target_triple: mips64el-linux-muslabin32
+          - target_arch: powerpc
+            target_triple: powerpc-linux-musleabihf
+          - target_arch: powerpc64
+            target_triple: powerpc64-linux-musl
+          - target_arch: powerpc64le
+            target_triple: powerpc64le-linux-musl
           - target_arch: riscv32
             target_triple: riscv32-linux-musl
           - target_arch: riscv64
@@ -67,10 +81,24 @@ jobs:
             target_triple: armeb-linux-musleabihf
           - target_arch: aarch64
             target_triple: aarch64-linux-musl
-          - target_arch: aarch64
+          - target_arch: aarch64_be
             target_triple: aarch64_be-linux-musl
           - target_arch: loong64
             target_triple: loongarch64-linux-musl
+          - target_arch: mips
+            target_triple: mips-linux-musleabihf
+          - target_arch: mips64
+            target_triple: mips64-linux-muslabin32
+          - target_arch: mipsel
+            target_triple: mipsel-linux-musleabihf
+          - target_arch: mips64el
+            target_triple: mips64el-linux-muslabin32
+          - target_arch: powerpc
+            target_triple: powerpc-linux-musleabihf
+          - target_arch: powerpc64
+            target_triple: powerpc64-linux-musl
+          - target_arch: powerpc64le
+            target_triple: powerpc64le-linux-musl
           - target_arch: riscv32
             target_triple: riscv32-linux-musl
           - target_arch: riscv64
