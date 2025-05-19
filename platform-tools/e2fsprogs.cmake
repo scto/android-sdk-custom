@@ -225,30 +225,3 @@ target_link_libraries(mke2fs
     dl
     ${CMAKE_PREFIX_PATH}/lib/libz.a
     )
-
-# e2fsdroid
-add_executable(e2fsdroid
-    ${SRC}/e2fsprogs/contrib/android/e2fsdroid.c
-    ${SRC}/e2fsprogs/contrib/android/block_range.c
-    ${SRC}/e2fsprogs/contrib/android/fsmap.c
-    ${SRC}/e2fsprogs/contrib/android/block_list.c
-    ${SRC}/e2fsprogs/contrib/android/base_fs.c
-    ${SRC}/e2fsprogs/contrib/android/perms.c
-    ${SRC}/e2fsprogs/contrib/android/basefs_allocator.c
-    )
-target_include_directories(e2fsdroid PRIVATE ${INCLUDES})
-target_link_libraries(e2fsdroid
-    libext2_misc 
-    libext2_com_err
-    libext2fs 
-    libselinux
-    libsepol
-    libpackagelistparser
-    libsparse
-    libcutils
-    libbase
-    liblog
-    pcre2-8
-    dl
-    ${CMAKE_PREFIX_PATH}/lib/libz.a
-    )
