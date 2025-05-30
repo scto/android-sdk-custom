@@ -135,6 +135,13 @@ jobs:
             sed -i 's/^\([[:space:]]*\)static_assert(std::atomic<.*>::is_always_lock_free);/\1\/\/ &/' ${PWD}/src/art/libartbase/base/metrics/metrics.h
           fi
 
+          # fml 2
+          sed -i '/# Set definitions and sources for ARM./i\
+          if(TARGET_ARCH MATCHES "^(thumb|thumbeb)$")\
+              add_definitions(-DPNG_ARM_NEON_OPT=0)\
+              add_definitions(-DPNG_ARM_NEON_IMPLEMENTATION=0)\
+          endif()
+          ' ${PWD}/src/libpng/CMakeLists.txt
           sed -i '/^namespace art {/i\
           \// see aosp/art/build/art.go\
           \// We need larger stack overflow guards for ASAN, as the compiled code will hav\
@@ -191,7 +198,7 @@ jobs:
 
           sed -i '/#if __has_feature(cxx_exceptions)/,/^#endif/ c\using Task = std::packaged_task<void()>;' ${PWD}/src/openscreen/platform/api/task_runner.h
           
-          # fml 2
+          # fml 3
           sed -i '/^dex::ProtoIndex DexFile::GetProtoIndexForCallSite(uint32_t call_site_idx) const {/,/^.*}[[:space:]]*$/ {
             /^.*}[[:space:]]*$/ s/$/ \/\/__INSERT_HERE__/
           }' ${PWD}/src/art/libdexfile/dex/dex_file.cc
