@@ -42,14 +42,6 @@ jobs:
             target_triple: riscv64-linux-musl
           - target_arch: s390x
             target_triple: s390x-linux-musl
-          - target_arch: thumb
-            target_triple: thumb-linux-musleabi
-          - target_arch: thumb
-            target_triple: thumb-linux-musleabihf
-          - target_arch: thumbeb
-            target_triple: thumbeb-linux-musleabi
-          - target_arch: thumbeb
-            target_triple: thumbeb-linux-musleabihf
           - target_arch: x86
             target_triple: x86-linux-musl
           - target_arch: x86_64
@@ -89,14 +81,6 @@ jobs:
             target_triple: riscv64-linux-musl
           - target_arch: s390x
             target_triple: s390x-linux-musl
-          - target_arch: thumb
-            target_triple: thumb-linux-musleabi
-          - target_arch: thumb
-            target_triple: thumb-linux-musleabihf
-          - target_arch: thumbeb
-            target_triple: thumbeb-linux-musleabi
-          - target_arch: thumbeb
-            target_triple: thumbeb-linux-musleabihf
           - target_arch: x86
             target_triple: x86-linux-musl
           - target_arch: x86_64
