@@ -339,7 +339,7 @@ jobs:
           build "build" "$(nproc)" "all" "${{github.workspace}}/src/protobuf/build/protoc"
 
           mkdir ~/sdk
-          mv build/bin ~/sdk/build-${{ inputs.target_arch }}
+          mv build/bin ~/sdk/build-${{ inputs.target_triple }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
