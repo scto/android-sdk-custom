@@ -54,8 +54,8 @@ jobs:
           TOOLCHAIN="${{ github.workspace }}/zig-as-llvm"
           export CC=${TOOLCHAIN}/bin/cc
           export CXX=${TOOLCHAIN}/bin/c++
-          export CFLAGS="-Os -fstack-clash-protection -fstack-protector-strong -fsanitize=undefined"
-          export CXXFLAGS="-Os -fstack-clash-protection -fstack-protector-strong -fsanitize=undefined"
+          export CFLAGS="-fstack-protector-strong -fsanitize=undefined"
+          export CXXFLAGS="-fstack-protector-strong -fsanitize=undefined"
           export LD=${TOOLCHAIN}/bin/ld
           export OBJCOPY=${TOOLCHAIN}/bin/objcopy
           export AR=${TOOLCHAIN}/bin/ar
