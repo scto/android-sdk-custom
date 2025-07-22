@@ -46,7 +46,7 @@ jobs:
             target_triple: x86-linux-sct
           - target_arch: x86_64
             target_triple: x86_64-linux-sct
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build_scto.yml
     with:
       version: ${{ inputs.version }}
       target_arch: ${{ matrix.target_arch }}
