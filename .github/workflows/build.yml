@@ -132,7 +132,7 @@ jobs:
           ' ${PWD}/src/core/libcutils/trace-dev.inc
 
           # fml
-          if [[ "${{ inputs.target_triple }}" == "riscv32-linux-musl" ]]; then
+          if [[ "${{ inputs.target_triple }}" == "riscv32-linux" ]]; then
             sed -i 's/^\([[:space:]]*\)static_assert(std::atomic<.*>::is_always_lock_free);/\1\/\/ &/' ${PWD}/src/art/libartbase/base/metrics/metrics.h
           fi
 
