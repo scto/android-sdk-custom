@@ -21,31 +21,31 @@ jobs:
       matrix:
         include:
           - target_arch: armel
-            target_triple: arm-linux-musleabi
+            target_triple: arm-linux-abi
           - target_arch: armhf
-            target_triple: arm-linux-musleabihf
+            target_triple: arm-linux-abihf
           - target_arch: armel
-            target_triple: armeb-linux-musleabi
+            target_triple: armeb-linux-abi
           - target_arch: armhf
-            target_triple: armeb-linux-musleabihf
+            target_triple: armeb-linux-abihf
           - target_arch: aarch64
-            target_triple: aarch64-linux-musl
+            target_triple: aarch64-linux
           - target_arch: aarch64_be
-            target_triple: aarch64_be-linux-musl
+            target_triple: aarch64_be-linux
           - target_arch: loongarch64
-            target_triple: loongarch64-linux-musl
+            target_triple: loongarch64-linux
           - target_arch: powerpc64le
-            target_triple: powerpc64le-linux-musl
+            target_triple: powerpc64le-linux
           - target_arch: riscv32
-            target_triple: riscv32-linux-musl
+            target_triple: riscv32-linux
           - target_arch: riscv64
-            target_triple: riscv64-linux-musl
+            target_triple: riscv64-linux
           - target_arch: s390x
-            target_triple: s390x-linux-musl
+            target_triple: s390x-linux
           - target_arch: x86
-            target_triple: x86-linux-musl
+            target_triple: x86-linux
           - target_arch: x86_64
-            target_triple: x86_64-linux-musl
+            target_triple: x86_64-linux
     uses: ./.github/workflows/build.yml
     with:
       version: ${{ inputs.version }}
@@ -60,31 +60,31 @@ jobs:
       matrix:
         include:
           - target_arch: armel
-            target_triple: arm-linux-musleabi
+            target_triple: arm-linux-abi
           - target_arch: armhf
-            target_triple: arm-linux-musleabihf
+            target_triple: arm-linux-abihf
           - target_arch: armel
-            target_triple: armeb-linux-musleabi
+            target_triple: armeb-linux-abi
           - target_arch: armhf
-            target_triple: armeb-linux-musleabihf
+            target_triple: armeb-linux-abihf
           - target_arch: aarch64
-            target_triple: aarch64-linux-musl
+            target_triple: aarch64-linux
           - target_arch: aarch64_be
-            target_triple: aarch64_be-linux-musl
+            target_triple: aarch64_be-linux
           - target_arch: loongarch64
-            target_triple: loongarch64-linux-musl
+            target_triple: loongarch64-linux
           - target_arch: powerpc64le
-            target_triple: powerpc64le-linux-musl
+            target_triple: powerpc64le-linux
           - target_arch: riscv32
-            target_triple: riscv32-linux-musl
+            target_triple: riscv32-linux
           - target_arch: riscv64
-            target_triple: riscv64-linux-musl
+            target_triple: riscv64-linux
           - target_arch: s390x
-            target_triple: s390x-linux-musl
+            target_triple: s390x-linux
           - target_arch: x86
-            target_triple: x86-linux-musl
+            target_triple: x86-linux
           - target_arch: x86_64
-            target_triple: x86_64-linux-musl
+            target_triple: x86_64-linux
     runs-on: ubuntu-24.04
     steps:
     - name: Download Artifact
